@@ -1,7 +1,7 @@
 function App() {
   return (
     <>
-      <h1>Welcome to Online Judge</h1>
+      <h1>Welcome to the Online Judge</h1>
     </>
   );
 }

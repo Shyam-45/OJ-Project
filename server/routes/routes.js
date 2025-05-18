@@ -1,6 +1,6 @@
 import express from 'express';
 import bcrypt from "bcryptjs";
-import { createRequire } from 'module';
+import {createRequire } from 'module';
 import User from '../models/User.js';
 
 const require = createRequire(import.meta.url);
