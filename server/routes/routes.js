@@ -24,12 +24,13 @@ router.post('/users/login', async (req, res) => {
         if (!getUser) {
             return res.status(404).send('User not exist!');
         }
-
+        
         // Check is password is correct
         const match = await bcrypt.compare(password, getUser.password);
         if (!match) {
             return res.status(401).send('Wrong Password');
         }
+
 
         // generate a token for user
         const accessToken = jwt.sign(
@@ -77,10 +78,16 @@ router.post('/users/register', async (req, res) => {
         }
 
         // Check if user already exists
-        const existingUser = await User.findOne({email});
-        if (existingUser) {
+        const existingUserEmail = await User.findOne({ email });
+        if (existingUserEmail) {
             console.log('User already exists with same email');
             return res.status(200).send('User already exists with same email');
+        }
+
+        const existingUserID = await User.findOne({ userID });
+        if (existingUserID) {
+            console.log('User ID already in use');
+            return res.status(200).send('User ID already in use');
         }
 
         // Encrypt the password
