@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { registerAuth } from "../Services/auth";
+import { useState, useContext } from "react";
+import { AuthContext } from "../Contexts/AuthContext";
+import { loginAuth } from "../Services/auth";
 
-export default function RegisterPage() {
+export default function LoginPage() {
+  const {setIsSigned} = useContext(AuthContext);
+
   const [inputValue, setInputValue] = useState({
-    name: "",
-    userID: "",
     email: "",
     password: "",
   });
@@ -27,11 +28,19 @@ export default function RegisterPage() {
 
   const handleSubmission = async (event) => {
     event.preventDefault();
+    console.log(inputValue);
+    setInputValue({
+      ...inputValue,
+      email: "",
+      password: ""
+    })
     try {    
-        const response = await registerAuth(inputValue);
-        console.log(response);
+        const response = await loginAuth(inputValue);
+        if(response.success) {
+          setIsSigned(true);
+        }
     } catch (err) {
-        console.log(`Error sending data to loginapi, ${err.message}`);
+        console.log(`Error sending data to loginAPI, ${err.message}`);
     }
 
   };
@@ -39,28 +48,6 @@ export default function RegisterPage() {
   return (
     <div>
       <form onSubmit={handleSubmission}>
-        <label htmlFor="userName">Name: </label>
-        &nbsp;
-        <input
-          placeholder="John Doe"
-          value={inputValue.userName}
-          onChange={handleInputValChange}
-          id="userName"
-          name="name"
-          required
-        ></input>
-        <br></br> <br></br>
-        <label htmlFor="userID">User ID: </label>
-        &nbsp;
-        <input
-          placeholder="john_doe"
-          value={inputValue.userID}
-          onChange={handleInputValChange}
-          id="userID"
-          name="userID"
-          required
-        ></input>
-        <br></br> <br></br>
         <label htmlFor="email">Email: </label>
         &nbsp;
         <input
@@ -87,7 +74,7 @@ export default function RegisterPage() {
         &nbsp;
         <label htmlFor="showPass">Show Password</label>
         <br></br> <br></br>
-        <button>Register</button>
+        <button>Login</button>
       </form>
     </div>
   );

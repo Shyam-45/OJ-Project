@@ -1,8 +1,13 @@
-import { useState } from "react";
-import { loginAuth } from "../Services/auth";
+import { useState, useContext } from "react";
+import { AuthContext } from "../Contexts/AuthContext";
+import { registerAuth } from "../Services/auth";
 
-export default function LoginPage() {
+export default function RegisterPage() {
+  const { setIsSigned } = useContext(AuthContext);
+
   const [inputValue, setInputValue] = useState({
+    name: "",
+    userID: "",
     email: "",
     password: "",
   });
@@ -25,18 +30,48 @@ export default function LoginPage() {
 
   const handleSubmission = async (event) => {
     event.preventDefault();
-    try {    
-        const response = await loginAuth(inputValue);
-        console.log(response);
+    setInputValue({
+      ...inputValue,
+      name: "",
+      userID: "",
+      email: "",
+      password: "",
+    });
+    try {
+      const response = await registerAuth(inputValue);
+      if (response.success) {
+        setIsSigned(true);
+      }
     } catch (err) {
-        console.log(`Error sending data to loginAPI, ${err.message}`);
+      console.log(`Error sending data to register API, ${err.message}`);
     }
-
   };
 
   return (
     <div>
       <form onSubmit={handleSubmission}>
+        <label htmlFor="userName">Name: </label>
+        &nbsp;
+        <input
+          placeholder="John Doe"
+          value={inputValue.userName}
+          onChange={handleInputValChange}
+          id="userName"
+          name="name"
+          required
+        ></input>
+        <br></br> <br></br>
+        <label htmlFor="userID">User ID: </label>
+        &nbsp;
+        <input
+          placeholder="john_doe"
+          value={inputValue.userID}
+          onChange={handleInputValChange}
+          id="userID"
+          name="userID"
+          required
+        ></input>
+        <br></br> <br></br>
         <label htmlFor="email">Email: </label>
         &nbsp;
         <input
@@ -63,7 +98,7 @@ export default function LoginPage() {
         &nbsp;
         <label htmlFor="showPass">Show Password</label>
         <br></br> <br></br>
-        <button>Login</button>
+        <button>Register</button>
       </form>
     </div>
   );
