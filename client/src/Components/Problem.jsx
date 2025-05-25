@@ -17,13 +17,12 @@ export default function Problem({ problem }) {
   };
 
   return (
-    <div className="m-4 p-4 w-full max-w-md border border-gray-300 rounded shadow-sm flex items-center">
-      <div className="w-3/5 border border-green-600">
-        <span className="text-lg font-medium">{problem.title}</span>
+    <div className="bg-white rounded-lg shadow p-6 m-4 flex flex-col md:flex-row items-center justify-between transition hover:shadow-lg">
+      <div className="flex-1 text-center md:text-left">
+        <h3 className="text-xl font-bold text-gray-900">{problem.title}</h3>
       </div>
-      <div className="w-1/5"></div>
       <button
-        className="w-1/5 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+        className="mt-4 md:mt-0 px-5 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition"
         onClick={() => handleSolveProblem(problem.problemID)}
       >
         Solve

@@ -3,7 +3,7 @@ import { AuthContext } from "../Contexts/AuthContext";
 import { loginAuth } from "../Services/auth";
 
 export default function LoginPage() {
-  const {setIsSigned} = useContext(AuthContext);
+  const { setIsSigned } = useContext(AuthContext);
 
   const [inputValue, setInputValue] = useState({
     email: "",
@@ -13,17 +13,15 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleInputValChange = (event) => {
-    let fieldName = event.target.name;
-    let fieldValue = event.target.value;
-
+    const { name, value } = event.target;
     setInputValue({
       ...inputValue,
-      [fieldName]: fieldValue,
+      [name]: value,
     });
   };
 
-  const handleShowPass = (event) => {
-    setShowPassword(event.target.checked);
+  const handleShowPass = () => {
+    setShowPassword((prev) => !prev);
   };
 
   const handleSubmission = async (event) => {
@@ -32,49 +30,87 @@ export default function LoginPage() {
     setInputValue({
       ...inputValue,
       email: "",
-      password: ""
-    })
-    try {    
-        const response = await loginAuth(inputValue);
-        if(response.success) {
-          setIsSigned(true);
-        }
+      password: "",
+    });
+    try {
+      const response = await loginAuth(inputValue);
+      if (response.success) {
+        setIsSigned(true);
+      }
     } catch (err) {
-        console.log(`Error sending data to loginAPI, ${err.message}`);
+      console.log(`Error sending data to loginAPI, ${err.message}`);
     }
-
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmission}>
-        <label htmlFor="email">Email: </label>
-        &nbsp;
-        <input
-          placeholder="johndoe@gmail.com"
-          value={inputValue.email}
-          onChange={handleInputValChange}
-          id="email"
-          name="email"
-          required
-        ></input>
-        <br></br> <br></br>
-        <label htmlFor="password">Password: </label>
-        &nbsp;
-        <input
-          value={inputValue.password}
-          onChange={handleInputValChange}
-          id="password"
-          name="password"
-          type={showPassword ? "text" : "password"}
-          required
-        ></input>
-        <br></br>
-        <input type="checkbox" id="showPass" onClick={handleShowPass}></input>
-        &nbsp;
-        <label htmlFor="showPass">Show Password</label>
-        <br></br> <br></br>
-        <button>Login</button>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <form
+        onSubmit={handleSubmission}
+        className="w-full max-w-md bg-white p-8 rounded-lg shadow-md space-y-6"
+      >
+        <h2 className="text-2xl font-semibold text-center text-gray-800">
+          Login to Your Account
+        </h2>
+
+        <div>
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="johndoe@gmail.com"
+            value={inputValue.email}
+            onChange={handleInputValChange}
+            required
+            className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Password
+          </label>
+          <input
+            type={showPassword ? "text" : "password"}
+            id="password"
+            name="password"
+            value={inputValue.password}
+            onChange={handleInputValChange}
+            required
+            className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+          />
+        </div>
+
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="showPass"
+            checked={showPassword}
+            onChange={handleShowPass}
+            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          />
+          <label
+            htmlFor="showPass"
+            className="ml-2 block text-sm text-gray-600"
+          >
+            Show Password
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          Login
+        </button>
       </form>
     </div>
   );
