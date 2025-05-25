@@ -2,7 +2,8 @@ import { v4 as uuidv4 } from "uuid";
 import Problem from "../models/Problem.js";
 import Testcase from "../models/Testcase.js";
 
-const showProblemList = async (req, res) => {
+
+export const showProblemList = async (req, res) => {
   console.log("Problem List request");
   try {
     const problemList = await Problem.find();
@@ -18,11 +19,11 @@ const showProblemList = async (req, res) => {
   }
 };
 
-const showProblem = async (req, res) => {
+export const showProblem = async (req, res) => {
   console.log(req.params);
 
   try {
-    const {problemID} = req.params;
+    const { problemID } = req.params;
     if (!problemID) {
       return res.json({ message: "ProblemID missing" });
       // Not sure if this is required
@@ -34,7 +35,7 @@ const showProblem = async (req, res) => {
     }
 
     console.log("Problem sent to dashboard");
-    console.log(problemInfo);
+    // console.log(problemInfo);
     res.json({ message: `ProblemID: ${problemID}`, problemInfo });
   } catch (err) {
     console.log(`Error while fetching problem, ${err}`);
@@ -42,7 +43,7 @@ const showProblem = async (req, res) => {
   }
 };
 
-const createProblem = async (req, res) => {
+export const createProblem = async (req, res) => {
   //   console.log(req.body);
 
   // Get info from req.body
@@ -117,7 +118,7 @@ const createProblem = async (req, res) => {
   }
 };
 
-const deleteProblem = async (req, res) => {
+export const deleteProblem = async (req, res) => {
   //   console.log(req.body);
 
   // Get info from req.body
@@ -144,11 +145,9 @@ const deleteProblem = async (req, res) => {
 
     console.log(`Problem created by ${problemCreater.createdBy.email}`);
     if (problemCreater.createdBy.email !== email) {
-      return res
-        .status(403)
-        .json({
-          message: "User does not have permission to delete this problem.",
-        });
+      return res.status(403).json({
+        message: "User does not have permission to delete this problem.",
+      });
     }
 
     // Delete from problems collection
@@ -170,5 +169,3 @@ const deleteProblem = async (req, res) => {
     res.json({ success: "failed", err });
   }
 };
-
-export { showProblemList, showProblem, createProblem, deleteProblem };
