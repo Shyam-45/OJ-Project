@@ -12,6 +12,7 @@ export const loginAuth = async (data) => {
       return {
         success: true,
         message: response.data.message,
+        userId: response.data.userId,
       };
     } else {
       return {
@@ -39,6 +40,7 @@ export const registerAuth = async (data) => {
       return {
         success: true,
         message: response.data.message,
+        userId: response.data.userId,
       };
     } else {
       return {
