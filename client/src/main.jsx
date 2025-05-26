@@ -12,7 +12,7 @@ import App from "./App.jsx";
 import Home from "./Components/Home.jsx";
 import LoginPage from "./Components/LoginPage.jsx";
 import RegisterPage from "./Components/RegisterPage.jsx";
-import User from "./Components/User.jsx";
+import Profile from "./Components/Profile.jsx";
 import SolveProblem from "./Components/SolveProblem.jsx";
 
 const router = createBrowserRouter(
@@ -22,10 +22,9 @@ const router = createBrowserRouter(
       <Route path="home" element={<Home />} />
       <Route path="login" element={<LoginPage />} />
       <Route path="signup" element={<RegisterPage />} />
-      {/* <Route path="profile/" element={<User />} />
-      <Route path="user/:userID" element={<User />} /> */}
+      <Route path="user/:userID" element={<Profile />} />
       <Route path="problem/:problemID" element={<SolveProblem />} />
-      {/* <Route path="problem/" element={<User />} />  CHECK WHAT HAPPENS WITH psotman call*/}
+      {/* <Route path="problem/" element={<User />} />  CHECK WHAT HAPPENS WITH postman call*/}
     </Route>
   )
 );
