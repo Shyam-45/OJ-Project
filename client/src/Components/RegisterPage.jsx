@@ -3,7 +3,7 @@ import { AuthContext } from "../Contexts/AuthContext";
 import { registerAuth } from "../Services/auth";
 
 export default function RegisterPage() {
-  const { setIsSigned } = useContext(AuthContext);
+  const { setIsSigned, setUserId } = useContext(AuthContext);
 
   const [inputValue, setInputValue] = useState({
     name: "",
@@ -28,20 +28,24 @@ export default function RegisterPage() {
 
   const handleSubmission = async (event) => {
     event.preventDefault();
-    setInputValue({
-      ...inputValue,
-      name: "",
-      userID: "",
-      email: "",
-      password: "",
-    });
+
     try {
       const response = await registerAuth(inputValue);
       if (response.success) {
         setIsSigned(true);
+        setUserId(setUserId(response.userid));  // check again
+        
       }
     } catch (err) {
       console.log(`Error sending data to register API, ${err.message}`);
+    } finally {
+      setInputValue({
+        ...inputValue,
+        name: "",
+        userID: "",
+        email: "",
+        password: "",
+      });
     }
   };
 

@@ -3,10 +3,10 @@ import { AuthContext } from "../Contexts/AuthContext";
 import { loginAuth } from "../Services/auth";
 
 export default function LoginPage() {
-  const { setIsSigned } = useContext(AuthContext);
+  const { setIsSigned, setUserId } = useContext(AuthContext);
 
   const [inputValue, setInputValue] = useState({
-    email: "",
+    userID: "",
     password: "",
   });
 
@@ -27,18 +27,21 @@ export default function LoginPage() {
   const handleSubmission = async (event) => {
     event.preventDefault();
     console.log(inputValue);
-    setInputValue({
-      ...inputValue,
-      email: "",
-      password: "",
-    });
     try {
       const response = await loginAuth(inputValue);
       if (response.success) {
         setIsSigned(true);
+        console.log("setting userid");
+        setUserId(response.userid);  // check again
       }
     } catch (err) {
       console.log(`Error sending data to loginAPI, ${err.message}`);
+    } finally {
+      setInputValue({
+        ...inputValue,
+        userID: "",
+        password: "",
+      });
     }
   };
 
@@ -54,17 +57,17 @@ export default function LoginPage() {
 
         <div>
           <label
-            htmlFor="email"
+            htmlFor="userID"
             className="block text-sm font-medium text-gray-700"
           >
-            Email
+            User ID
           </label>
           <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="johndoe@gmail.com"
-            value={inputValue.email}
+            type="text"
+            id="userID"
+            name="userID"
+            placeholder="john_doe"
+            value={inputValue.userID}
             onChange={handleInputValChange}
             required
             className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
