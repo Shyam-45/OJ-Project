@@ -15,7 +15,7 @@ import {
   jsSample,
   cppSample,
 } from "../Utils/sampleCode.js";
-import { getProblemInfo, getOutput } from "../Services/problem";
+import { getProblemInfo, getOutput, getVerdict } from "../Services/problem";
 
 export default function SolveProblem() {
   const { problemID } = useParams();
@@ -30,7 +30,8 @@ export default function SolveProblem() {
   const [loading, setLoading] = useState(true);
   const [language, setLanguage] = useState("cpp");
   const [code, setCode] = useState(cppSample);
-  const [output, setOutput] = useState("");
+  const [outputMessage, setOutputMessage] = useState("");
+  const [verdict, setVerdict] = useState("");
   const [err, setErr] = useState("");
 
   useEffect(() => {
@@ -75,22 +76,58 @@ export default function SolveProblem() {
     if (!selected) return;
     setLanguage(selected);
     setCode(sampleCodeMap[selected]);
-    setOutput("");
+    setOutputMessage("");
     setErr("");
+    setVerdict("");
   };
 
   const handleRun = async () => {
     const payload = { language, code };
     try {
+      setOutputMessage("");
+      setErr("");
+      setVerdict("");
       const response = await getOutput(problemID, payload);
       console.log(response);
       if (!response.success) {
-        setOutput("");
         setErr(response.error);
         return;
       }
+      const { count, total } = response;
+      let message = `All sample test cases passed`;
+      if (count != total) {
+        message = `${count} out of ${total} sample test case passed`;
+      }
+      setOutputMessage(message);
       setErr("");
-      setOutput(response.message);
+    } catch (error) {
+      console.log("Problem in receiving req from run {language, code}");
+      return;
+    }
+  };
+
+  const handleSubmit = async () => {
+    const payload = { language, code };
+    try {
+      setOutputMessage("");
+      setErr("");
+      setVerdict("");
+      const response = await getVerdict(problemID, payload);
+      console.log(response);
+      if (!response.success) {
+        setErr(response.error);
+        return;
+      }
+      const { count, total } = response;
+      let message = `All test cases passed`;
+      let verdictMessage = "ACCEPTED";
+      if (count != total) {
+        message = `${count} out of ${total} test case passed`;
+        verdictMessage = "FAIL";
+      }
+      setVerdict(verdictMessage);
+      setOutputMessage(message);
+      setErr("");
     } catch (error) {
       console.log("Problem in receiving req from run {language, code}");
       return;
@@ -127,9 +164,9 @@ export default function SolveProblem() {
               {problem.sampleInputOutput.map((item) => (
                 <div key={item.sioID} className="bg-gray-50 p-4 rounded">
                   <h4 className="font-semibold">Input</h4>
-                  <p className="text-gray-600 mb-2">{item.input}</p>
+                  <pre className="text-gray-600 mb-2">{item.input}</pre>
                   <h4 className="font-semibold">Output</h4>
-                  <p className="text-gray-600">{item.output}</p>
+                  <pre className="text-gray-600">{item.output}</pre>
                 </div>
               ))}
             </div>
@@ -144,7 +181,6 @@ export default function SolveProblem() {
               onChange={selectLanguage}
               className="mb-4 p-2 border border-gray-300 rounded"
             >
-              {/* <option value="">Select Language</option> */}
               <option value="c">C</option>
               <option value="cpp">C++</option>
               <option value="py">Python</option>
@@ -179,13 +215,27 @@ export default function SolveProblem() {
                 <button
                   type="button"
                   className="flex-1 bg-green-600 text-white py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                  onClick={handleSubmit}
                 >
                   Submit
                 </button>
               </div>
-              <div>
-                {setOutput && <p>{output}</p>}
-                {setErr && <p>{err}</p>}
+              <div className="mt-4">
+                {verdict && (
+                  <p
+                    className={`text-center text-xl font-bold ${
+                      verdict === "FAIL" ? "text-red-500" : "text-green-600"
+                    }`}
+                  >
+                    {verdict}
+                  </p>
+                )}
+                {outputMessage && (
+                  <pre className="mt-2 p-4 bg-gray-100 rounded text-gray-800">
+                    {outputMessage}
+                  </pre>
+                )}
+                {err && <p className="mt-2 text-red-600 font-medium">{err}</p>}
               </div>
             </div>
           </div>
