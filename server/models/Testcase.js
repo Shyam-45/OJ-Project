@@ -11,21 +11,40 @@ const testcaseSchema = new Schema({
   problemID: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
-  inputOutput: {
+  sampleInputOutputFile: {
     type: [
       {
-        ioID: {
+        siofID: {
           type: String,
           unique: true,
           required: true,
         },
-        input: {
+        sampleInputFile: {
           type: String,
           required: true,
         },
-        output: {
+        sampleOutputFile: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+  },
+  inputOutputFile: {
+    type: [
+      {
+        iofID: {
+          type: String,
+          unique: true,
+          required: true,
+        },
+        inputFile: {
+          type: String,
+          required: true,
+        },
+        outputFile: {
           type: String,
           required: true,
         },
@@ -33,14 +52,8 @@ const testcaseSchema = new Schema({
     ],
   },
   createdBy: {
-    email: {
-      type: String,
-      required: true,
-    },
-    userID: {
-      type: String,
-      required: true,
-    },
+    type: String,
+    required: true,
   },
 });
 

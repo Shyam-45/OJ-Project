@@ -11,7 +11,6 @@ const problemSchema = new Schema({
   title: {
     type: String,
     required: true,
-    unique: true,
     default: null,
   },
   description: {
@@ -40,7 +39,7 @@ const problemSchema = new Schema({
       {
         sioID: {
           type: String,
-          unique: true
+          unique: true,
         },
         input: {
           type: String,
@@ -52,14 +51,8 @@ const problemSchema = new Schema({
     ],
   },
   createdBy: {
-    email: {
-      type: String,
-      required: true,
-    },
-    userID: {
-      type: String,
-      required: true,
-    },
+    type: String,
+    required: true,
   },
 });
 
