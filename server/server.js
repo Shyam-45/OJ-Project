@@ -31,7 +31,7 @@ app.use("/user", user);
 app.use("/problem", problem);
 
 app.get("/authlogin", authentincateUser, (req, res) => {
-  res.status(200).json({ success: true, error: "User Authentication successful" });
+  res.status(200).json({ success: true, message: "User Authentication successful", userid: req.userId});
 });
 
 app.use(errorHandler);
