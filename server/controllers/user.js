@@ -10,15 +10,15 @@ const SECRET_KEY_JWT = process.env.SECRET_KEY_JWT;
 
 export const userLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { userID, password } = req.body;
 
-    if (!(email && password)) {
+    if (!(userID && password)) {
       return res
         .status(401)
         .json({ success: false, error: "All fields are mandatory" });
     }
 
-    const getUser = await User.findOne({ email });
+    const getUser = await User.findOne({ userID });
     if (!getUser) {
       return res.status(404).json({
         success: false,
@@ -34,7 +34,7 @@ export const userLogin = async (req, res) => {
       });
     }
 
-    const accessToken = jwt.sign({ id: getUser._id, email }, SECRET_KEY_JWT, {
+    const accessToken = jwt.sign({ id: getUser._id, userID}, SECRET_KEY_JWT, {
       expiresIn: "1d",
     });
 
@@ -49,6 +49,7 @@ export const userLogin = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "User successfully logged in",
+      userId: userID
     });
   } catch (err) {
     console.error("Login error:", err.message);
@@ -97,7 +98,7 @@ export const userSingup = async (req, res) => {
       password: hashedPassword,
     });
 
-    const accessToken = jwt.sign({ id: user._id, email }, SECRET_KEY_JWT, {
+    const accessToken = jwt.sign({ id: user._id, userID }, SECRET_KEY_JWT, {
       expiresIn: "1d",
     });
 
@@ -113,6 +114,7 @@ export const userSingup = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "User saved to DB",
+      userId: userID
     });
   } catch (err) {
     console.error("Error while saving user to DB:", err.message);
