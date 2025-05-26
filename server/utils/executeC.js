@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import os from "os";
 import { fileURLToPath } from "url";
 import { exec as execCallback } from "child_process";
 import { promisify } from "util";
@@ -16,25 +17,33 @@ if (!fs.existsSync(dirOutput)) {
   fs.mkdirSync(dirOutput, { recursive: true });
 }
 
-export const executeC = async (filePath) => {
+export const executeC = async (filePath, sampleInputContent) => {
   const jobId = path.basename(filePath).split(".")[0];
   const exeFileName = `${jobId}.exe`;
   const exeFile = path.join(dirOutput, exeFileName);
-  console.log(`Printing c file path: ${exeFile}`);
-  const command = `gcc ${filePath} -o ${exeFile} && cd ${dirOutput} && .\\${exeFileName}`;
+
+  const inputFilePath = path.join(os.tmpdir(), `${jobId}_input.txt`);
 
   try {
-    const { stdout, stderr } = await exec(command);
+    fs.writeFileSync(inputFilePath, sampleInputContent);
+
+    const compileCommand = `gcc ${filePath} -o ${exeFile}`;
+    console.log(`Compiling with: ${compileCommand}`);
+    await exec(compileCommand);
+
+    const runCommand = `"${exeFile}" < "${inputFilePath}"`;
+    console.log(`Running C file with: ${runCommand}`);
+    const { stdout, stderr } = await exec(runCommand);
 
     if (stderr) {
-      console.error(`Standard error (warnings or errors): ${stderr}`);
-      return { success: false, error: stderr };
+      console.error(`Standard error: ${stderr}`);
     }
 
     return { success: true, message: stdout };
   } catch (err) {
-    // This is where actual errors like compilation failure will be caught
-    console.error(`Code Execution failed: ${err.message}`);
+    console.error(`Code execution failed: ${err.message}`);
     return { success: false, error: err.message };
+  } finally {
+    if (fs.existsSync(inputFilePath)) fs.unlinkSync(inputFilePath);
   }
 };
