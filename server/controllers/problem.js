@@ -1,7 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 import Problem from "../models/Problem.js";
 import Testcase from "../models/Testcase.js";
-
+import { parseSampleTestCases } from "../utils/parseSampletestcase.js";
+import { parseTestCases } from "../utils/parseTestcases.js";
 
 export const showProblemList = async (req, res) => {
   console.log("Problem List request");
@@ -35,7 +36,6 @@ export const showProblem = async (req, res) => {
     }
 
     console.log("Problem sent to dashboard");
-    // console.log(problemInfo);
     res.json({ message: `ProblemID: ${problemID}`, problemInfo });
   } catch (err) {
     console.log(`Error while fetching problem, ${err}`);
@@ -44,7 +44,7 @@ export const showProblem = async (req, res) => {
 };
 
 export const createProblem = async (req, res) => {
-  //   console.log(req.body);
+  console.log(req.body);
 
   // Get info from req.body
   try {
@@ -58,10 +58,11 @@ export const createProblem = async (req, res) => {
       tags,
       inputInfo,
       outputInfo,
-      sampleInputOutput,
-      inputOutput,
-      createdBy, // In future this will be replaced by above check
+      createdBy,
     } = req.body;
+
+    console.log("Received text fields:");
+    console.log({ title, description, tags, inputInfo, outputInfo, createdBy });
 
     if (
       !(title && description && tags && inputInfo && outputInfo && createdBy)
@@ -70,25 +71,47 @@ export const createProblem = async (req, res) => {
       return res.json({ message: "Enter all required fields" });
     }
 
+    let sampleInputOutput = JSON.parse(req.body.sampleInputOutput || {});
+    console.log("Sample Input/Output:");
+    console.log(sampleInputOutput);
+
+    const sampleInputFile = req.files["sampleInputFile"]?.[0];
+    const sampleOutputFile = req.files["sampleOutputFile"]?.[0];
+    const inputFile = req.files["inputFile"]?.[0];
+    const outputFile = req.files["outputFile"]?.[0];
+
+    console.log("Uploaded files:");
+    if (sampleInputFile)
+      console.log("Sample Input File:", sampleInputFile.originalname);
+    if (sampleOutputFile)
+      console.log("Sample Output File:", sampleOutputFile.originalname);
+    if (inputFile) console.log("Input File:", inputFile.originalname);
+    if (outputFile) console.log("Output File:", outputFile.originalname);
+
     // Generate problemID and testcaseID
     const problemID = uuidv4();
     const testcaseID = uuidv4();
-
+    console.log("uuid created for problemID and testcaseID");
     // Generate sioID for sample test cases
-    sampleInputOutput.forEach((sio) => (sio.sioID = uuidv4()));
+    // Currently we only have 1 sample test case to display
+    let sampleInpOup = sampleInputOutput;
+    sampleInputOutput = [{ ...sampleInpOup, sioID: uuidv4() }];
+    // sampleInputOutput.forEach((sio) => (sio.sioID = uuidv4()));
 
+    console.log("uuid created for sample test case");
     // Generate ioID for test cases
-    inputOutput.forEach((io) => (io.ioID = uuidv4()));
+    // inputOutput.forEach((io) => (io.ioID = uuidv4()));
+    // console.log("uuid created for test case");
 
-    console.log(`problemID: ${problemID}`);
-    console.log(`testcaseID: ${testcaseID}`);
-    console.log(`title: ${title}`);
-    console.log(`description: ${description}`);
-    console.log(`inputInfo: ${inputInfo}`);
-    console.log(`outputInfo: ${outputInfo}`);
-    console.log(sampleInputOutput);
-    console.log(inputOutput);
     console.log(createdBy);
+
+    const sampleInputOutputFile = parseSampleTestCases(sampleInputFile.path, sampleOutputFile.path);
+    console.log("Parsed sample input/output testcases:", sampleInputOutputFile.length);
+    console.log(sampleInputOutputFile);
+    const inputOutputFile = parseTestCases(inputFile.path, outputFile.path);
+    console.log("Parsed input/output testcases:", inputOutputFile.length);
+
+    console.log(inputOutputFile);
 
     // Store newProblem in DB
     const newProblem = await Problem.create({
@@ -106,12 +129,16 @@ export const createProblem = async (req, res) => {
     const newTestcase = await Testcase.create({
       testcaseID,
       problemID,
-      inputOutput,
+      sampleInputOutputFile,
+      inputOutputFile,
       createdBy,
     });
 
     console.log("Problem added to DB");
-    res.json({ message: "Problem added to DB" });
+    return res.json({
+      success: true,
+      message: "we hve received all requested fields",
+    });
   } catch (err) {
     console.log(`Error occurred while saving problem, ${err}`);
     res.json({ success: "failed", err });
