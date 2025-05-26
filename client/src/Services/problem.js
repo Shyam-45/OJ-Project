@@ -45,3 +45,36 @@ export const getOutput = async (id, data) => {
     return { success: "fail", error: "something went wrong" };
   }
 };
+
+export const getVerdict = async (id, data) => {
+  try {
+    const response = await axios.post(
+      `${backend_url}/problem/${id}/submit`,
+      data,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (err) {
+    console.log("Problem while interacting with backend for RUN");
+    return { success: "fail", error: "something went wrong" };
+  }
+};
+
+export const sendNewProblem = async (data) => {
+  try {
+    const response = await axios.post(
+      `${backend_url}/problem/newProblem`,
+      data,
+      {
+        withCredentials: true,
+      }
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    console.log("NewProblm API encountered issue while interacting with backend");
+    return {success: false, error: "NewProblm API encountered issue while interacting with backend"}
+  }
+};
