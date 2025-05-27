@@ -3,3 +3,6 @@
 
 # Ignore node_modules in any folder
 **/node_modules/
+
+# Ignore gitignore in any subdirectory
+**/gitignore
