@@ -8,24 +8,36 @@ export const loginAuth = async (data) => {
       withCredentials: true,
     });
 
-    if (response.data.success) {
-      return {
-        success: true,
-        message: response.data.message,
-        userId: response.data.userId,
-      };
-    } else {
+    if (!response.data.success) {
+      console.log(response.data.error);
       return {
         success: false,
-        error: response.data.error || "Login failed",
+        error: response.data.error,
       };
     }
+    return {
+      success: true,
+      message: response.data.message,
+      user_id: response.data.userId,
+    };
   } catch (err) {
-    console.error("Error during login at api end: ", err.message);
+    if (err.response.status === 401) {
+      console.error(err.response.data.error);
+      return {
+        success: false,
+        error: err.response.data.error,
+      };
+    }
 
+    if (err.response.status === 500) {
+      console.log(`Internal server error`);
+    }
+
+    // Error during login at api endpoint
+    console.log(err);
     return {
       success: false,
-      error: "Unable to login.",
+      error: "Login failed",
     };
   }
 };
@@ -36,24 +48,35 @@ export const registerAuth = async (data) => {
       withCredentials: true,
     });
 
-    if (response.data.success) {
-      return {
-        success: true,
-        message: response.data.message,
-        userId: response.data.userId,
-      };
-    } else {
+    if (!response.data.success) {
       return {
         success: false,
-        eror: response.data.error || "User registration failed",
+        eror: response.data.error,
       };
     }
+    return {
+      success: true,
+      message: response.data.message,
+      user_id: response.data.userId,
+    };
   } catch (err) {
-    console.error("Error during registration at api end: ", err.message);
+    if (err.response.status === 401 || err.response.status === 409) {
+      console.error(err.response.data.error);
+      return {
+        success: false,
+        error: err.response.data.error,
+      };
+    }
 
+    if (err.response.status === 500) {
+      console.log(`Internal server error`);
+    }
+
+    // Error during singup at api endpoint
+    console.log(err);
     return {
       success: false,
-      error: "Unable to register.",
+      error: "Account registration failed",
     };
   }
 };
@@ -66,15 +89,18 @@ export const checkLogin = async () => {
     console.log(response);
 
     if (response.data.success) {
-      return { loggedIn: true };
+      // console.log("ereir  jjjn");
+      return { loggedIn: true, user_id: response.data.userid };
     }
   } catch (err) {
     if (err.response?.status === 401) {
-      return { loggedIn: false, message: err.response.data.error };
+      // Error from backend while checking login status
+      console.log(`${err.response.data.error}`);
+      return { loggedIn: false };
     }
     // Unexpected errors
-    console.error("Unexpected error checking login:", err);
-    return { loggedIn: false, message: "Unknown error" };
+    console.error("Unexpected error checking login status through API:", err);
+    return { loggedIn: false };
   }
 };
 

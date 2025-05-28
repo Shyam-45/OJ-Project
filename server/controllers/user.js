@@ -8,8 +8,40 @@ import User from "../models/User.js";
 dotenv.config();
 const SECRET_KEY_JWT = process.env.SECRET_KEY_JWT;
 
+export const identifyUser = async (req, res) => {
+  try {
+    const { userid } = req.body;
+    const userInfo = await User.findOne({ userID: userid });
+
+    if (!userInfo) {
+      return res
+        .status(404)
+        .json({ success: false, error: "User does not exist" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "User identification successful",
+      name: userInfo.name,
+      userID: userInfo.userID,
+      email: userInfo.email,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: "Something went wrong" });
+  }
+};
+
 export const userLogin = async (req, res) => {
   try {
+    const token = req.cookies?.accessToken;
+    if (token) {
+      return res
+        .status(400)
+        .json({ success: false, error: "User already logged in" });
+    }
+    // If a request is made from postman even if user is already logged in
+    // Not sure if needed
+
     const { userID, password } = req.body;
 
     if (!(userID && password)) {
@@ -20,7 +52,7 @@ export const userLogin = async (req, res) => {
 
     const getUser = await User.findOne({ userID });
     if (!getUser) {
-      return res.status(404).json({
+      return res.status(401).json({
         success: false,
         error: "User does not exist!",
       });
@@ -34,7 +66,7 @@ export const userLogin = async (req, res) => {
       });
     }
 
-    const accessToken = jwt.sign({ id: getUser._id, userID}, SECRET_KEY_JWT, {
+    const accessToken = jwt.sign({ id: getUser._id, userID }, SECRET_KEY_JWT, {
       expiresIn: "1d",
     });
 
@@ -42,14 +74,14 @@ export const userLogin = async (req, res) => {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
-      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day in milliseconds
+      maxAge: 1 * 24 * 60 * 60 * 1000,
     });
 
     console.log("User logged in");
     return res.status(200).json({
       success: true,
-      message: "User successfully logged in",
-      userId: userID
+      message: "User logged in successfully",
+      userId: userID,
     });
   } catch (err) {
     console.error("Login error:", err.message);
@@ -62,10 +94,18 @@ export const userLogin = async (req, res) => {
 
 export const userSingup = async (req, res) => {
   try {
+    const token = req.cookies?.accessToken;
+    if (token) {
+      return res
+        .status(400)
+        .json({ success: false, error: "User already logged in" });
+    }
+    // Not sure if needed
+
     const { name, email, userID, password } = req.body;
 
     if (!(name && email && userID && password)) {
-      return res.status(400).json({
+      return res.status(401).json({
         success: false,
         error: "All fields are mandatory",
       });
@@ -102,19 +142,16 @@ export const userSingup = async (req, res) => {
       expiresIn: "1d",
     });
 
-    // user.token = accessToken;
-    // user.password = undefined;
-
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day in milliseconds
+      maxAge: 1 * 24 * 60 * 60 * 1000,
     });
 
     console.log("Account successfully registered");
     return res.status(201).json({
       success: true,
       message: "User saved to DB",
-      userId: userID
+      userId: userID,
     });
   } catch (err) {
     console.error("Error while saving user to DB:", err.message);

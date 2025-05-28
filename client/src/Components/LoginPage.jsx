@@ -1,8 +1,11 @@
 import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Contexts/AuthContext";
 import { loginAuth } from "../Services/auth";
 
 export default function LoginPage() {
+  console.log("Login Pge component");
+  const navigate = useNavigate();
   const { setIsSigned, setUserId } = useContext(AuthContext);
 
   const [inputValue, setInputValue] = useState({
@@ -11,6 +14,7 @@ export default function LoginPage() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
   const handleInputValChange = (event) => {
     const { name, value } = event.target;
@@ -26,16 +30,29 @@ export default function LoginPage() {
 
   const handleSubmission = async (event) => {
     event.preventDefault();
-    console.log(inputValue);
+    // console.log(inputValue);
     try {
+      // Validate user input
+      if (!(inputValue.userID && inputValue.password)) {
+        setError("Please enter user crdentials");
+        return;
+      }
+      // As we have set required in forms it might be unnecesaary but just might be a case
+
       const response = await loginAuth(inputValue);
       if (response.success) {
         setIsSigned(true);
-        console.log("setting userid");
-        setUserId(response.userid);  // check again
+        setUserId(response.user_id);
+        setError("");
+        return;
       }
+      setIsSigned(false);
+      setUserId("");
+      setError(response.error);
     } catch (err) {
-      console.log(`Error sending data to loginAPI, ${err.message}`);
+      // Error sending data to loginAPI
+      console.log(`${err.message}`);
+      setError("Login attempt failed");
     } finally {
       setInputValue({
         ...inputValue,
@@ -107,13 +124,27 @@ export default function LoginPage() {
             Show Password
           </label>
         </div>
-
+        {error && (
+          <p className="mt-2 text-sm text-red-600 font-semibold">❌ {error}</p>
+        )}
         <button
           type="submit"
           className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
           Login
         </button>
+        <div className="flex justify-center">
+          <p className="px-2">Sign up for a new account</p>
+          <button
+            type="button"
+            className="px-2 bg-purple-400 font-medium rounded-md text-sm text-white"
+            onClick={() => {
+              navigate("/signup");
+            }}
+          >
+            Register
+          </button>
+        </div>
       </form>
     </div>
   );

@@ -4,6 +4,7 @@ export default function Problem({ problem }) {
   const navigate = useNavigate();
 
   const handleSolveProblem = (id) => {
+    console.log("Problem component");
     console.log(`Problem with problem id: ${id} clicked`);
     // if (!isLoggedIn) {
     //   alert("Please log in first!");

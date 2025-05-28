@@ -3,6 +3,7 @@ import { AuthContext } from "../Contexts/AuthContext";
 import { registerAuth } from "../Services/auth";
 
 export default function RegisterPage() {
+  console.log("Register page component");
   const { setIsSigned, setUserId } = useContext(AuthContext);
 
   const [inputValue, setInputValue] = useState({
@@ -13,6 +14,7 @@ export default function RegisterPage() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
   const handleInputValChange = (event) => {
     const { name, value } = event.target;
@@ -30,14 +32,32 @@ export default function RegisterPage() {
     event.preventDefault();
 
     try {
+      // Validate user input
+      if (
+        !(
+          inputValue.name &&
+          inputValue.userID &&
+          inputValue.email &&
+          inputValue.password
+        )
+      ) {
+        setError("Please enter user crdentials");
+        return;
+      }
+
       const response = await registerAuth(inputValue);
       if (response.success) {
         setIsSigned(true);
-        setUserId(setUserId(response.userid));  // check again
-        
+        setUserId(response.user_id);
+        setError("");
+        return;
       }
+      setIsSigned(false);
+      setUserId("");
+      setError(response.error);
     } catch (err) {
-      console.log(`Error sending data to register API, ${err.message}`);
+      console.log("Error sending data to register API");
+      setError("Registration attempt failed");
     } finally {
       setInputValue({
         ...inputValue,
@@ -149,7 +169,9 @@ export default function RegisterPage() {
             Show Password
           </label>
         </div>
-
+        {error && (
+          <p className="mt-2 text-sm text-red-600 font-semibold">❌ {error}</p>
+        )}
         <button
           type="submit"
           className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { sendNewProblem } from "../Services/problem";
 
 export default function Profile() {
+  console.log("Profile component");
   const { userID } = useParams();
 
   const [inputValue, setInputValue] = useState({

@@ -1,19 +1,26 @@
 import { useState, useEffect, useContext } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Contexts/AuthContext";
 import { checkLogin, logoutUser } from "../Services/auth";
 
 export default function Navbar() {
+  console.log("Nvabr component");
+  const navigate = useNavigate();
   const { isSigned, setIsSigned, userId, setUserId } = useContext(AuthContext);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  useEffect(() => {
-    async function loggedStatus() {
-      const status = (await checkLogin()).loggedIn;
-      setIsSigned(status);
-    }
-    loggedStatus();
-  }, [setIsSigned]);
+  // useEffect(() => {
+  //   async function loggedStatus() {
+  //     const status = (await checkLogin()).loggedIn;
+  //     if (!status) {
+  //       navigate("/login");
+  //       return;
+  //     }
+  //     setIsSigned(status);
+  //     navigate("/home");
+  //   }
+  //   loggedStatus();
+  // }, [isSigned]);
 
   const handleSignOut = async () => {
     try {
@@ -29,7 +36,8 @@ export default function Navbar() {
   const links = (
     <>
       <NavLink
-        to="/home"
+        to={isSigned ? "/" : "/login"}
+        // to="/home"
         className="block px-3 py-2 rounded hover:bg-gray-100"
         onClick={() => setMobileOpen(false)}
       >
