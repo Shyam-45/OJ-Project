@@ -16,6 +16,7 @@ export default function ProtectedRoutes() {
 
   if (!isSigned && (pathname === "/login" || pathname === "/signup")) {
     return <Outlet />;
+      //   Outlet tells React‑Router “render whichever nested <Route> matches here
   }
 
   if (!isSigned) {
@@ -23,11 +24,10 @@ export default function ProtectedRoutes() {
     //replace ensures that the redirect doesn’t leave a “stuck” entry in the browser history (so the user can’t press “Back” to return to the protected page).
   }
 
-  if (isSigned && (pathname === "/login" || pathname === "/signup")) {
+  if (isSigned && (pathname === "/login" || pathname === "/signup" || pathname === "/home")) {
     console.log("I am hit line 21");
     return <Navigate to="/" replace />;
   }
 
   return <Outlet />;
-  //   Outlet tells React‑Router “render whichever nested <Route> matches here
 }

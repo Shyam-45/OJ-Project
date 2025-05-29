@@ -10,29 +10,26 @@ import "./index.css";
 import { AuthProvider } from "./Contexts/AuthContext.jsx";
 import ProtectedRoutes from "./Guards/ProtectedRoutes.jsx";
 import App from "./App.jsx";
-import Home from "./Components/Home.jsx";
-import LoginPage from "./Components/LoginPage.jsx";
-import RegisterPage from "./Components/RegisterPage.jsx";
-import Profile from "./Components/Profile.jsx";
-import SolveProblem from "./Components/SolveProblem.jsx";
+import LoginPage from "./Pages/LoginPage.jsx";
+import SolveProblemPage from "./Pages/SolveProblemPage.jsx";
+import SignupPage from "./Pages/SignupPage.jsx";
+import HomePage from "./Pages/HomePage.jsx";
+import ProfilePage from "./Pages/ProfilePage.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    // **All** routes are children of ProtectedRoutes
-    <Route element={<ProtectedRoutes />}>
-      <Route path="/" element={<App />}>
-        <Route index element={<Home />} />
-        {/* these will still render when NOT signed-in because your guard whitelists them */}
+    <>
+      <Route element={<ProtectedRoutes />}>
         <Route path="login" element={<LoginPage />} />
-        <Route path="signup" element={<RegisterPage />} />
-
-        {/* everything else is fully protected */}
-        {/* <Route index element={<Home />} /> */}
-        <Route path="home" element={<Home />} />
-        <Route path="user/:userID" element={<Profile />} />
-        <Route path="problem/:problemID" element={<SolveProblem />} />
+        <Route path="signup" element={<SignupPage />} />
+        <Route path="problem/:problemID" element={<SolveProblemPage />} />
+        <Route path="/" element={<App />}>
+          <Route index element={<HomePage />} />
+          <Route path="home" element={<HomePage />} />
+          <Route path="user/:userID" element={<ProfilePage />} />
+        </Route>
       </Route>
-    </Route>
+    </>
   )
 );
 

@@ -5,28 +5,42 @@ const backend_url = import.meta.env.VITE_BACKEND_URL;
 export const getProblemList = async () => {
   try {
     console.log("API for problem list called");
-    const response = await axios.get(`${backend_url}/problem`);
-    console.log(response.data.problemList);
-    console.log("problem list api got the response");
-    return response.data.problemList;
+    const response = await axios.get(`${backend_url}/problem`, {
+      withCredentials: true,
+    });
+
+    // if (!response.data.success) {
+    //   // This case might never be applicable (based on backend response status)
+    //   return {
+    //     success: false,
+    //     eror: response.data.error,
+    //   };
+    // }
+
+    return { success: true, problem_list: response.data.problemList };
   } catch (err) {
+    if (err.response.status === 500) {
+      return err.response.data;
+    }
+
+    // If there is unexpected error
     console.log(`Error , ${err.message}`);
-    // If there is issue fetching problem list
-    return [];
+
+    return { success: false, error: "Problem list not found" };
   }
 };
 
 export const getProblemInfo = async (id) => {
   try {
-    console.log(`API for problemID: ${id} called`);
     const response = await axios.get(`${backend_url}/problem/${id}`);
-    console.log(response.data.problemInfo);
-    console.log(`problemID: ${id} API got the response`);
-    return response.data.problemInfo;
+    // Avoiding redundant checks
+    return { success: true, problemInfo: response.data.problemInfo };
   } catch (err) {
     console.log(`Error , ${err.message}`);
-    // If there is issue fetching problem
-    // return ();
+    if (err.response.status === 404) {
+      return err.response.data;
+    }
+    return { success: false, error: "Something went wrong" };
   }
 };
 
@@ -74,7 +88,12 @@ export const sendNewProblem = async (data) => {
     console.log(response.data);
     return response.data;
   } catch (err) {
-    console.log("NewProblm API encountered issue while interacting with backend");
-    return {success: false, error: "NewProblm API encountered issue while interacting with backend"}
+    console.log(
+      "NewProblm API encountered issue while interacting with backend"
+    );
+    return {
+      success: false,
+      error: "NewProblm API encountered issue while interacting with backend",
+    };
   }
 };

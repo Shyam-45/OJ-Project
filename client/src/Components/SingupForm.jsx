@@ -1,15 +1,17 @@
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Contexts/AuthContext";
-import { loginAuth } from "../Services/auth";
+import { registerAuth } from "../Services/user";
+import { useNavigate } from "react-router-dom";
 
-export default function LoginPage() {
-  console.log("Login Pge component");
+export default function SingupForm() {
   const navigate = useNavigate();
+  console.log("Register page component");
   const { setIsSigned, setUserId } = useContext(AuthContext);
 
   const [inputValue, setInputValue] = useState({
+    name: "",
     userID: "",
+    email: "",
     password: "",
   });
 
@@ -30,16 +32,22 @@ export default function LoginPage() {
 
   const handleSubmission = async (event) => {
     event.preventDefault();
-    // console.log(inputValue);
+
     try {
       // Validate user input
-      if (!(inputValue.userID && inputValue.password)) {
+      if (
+        !(
+          inputValue.name &&
+          inputValue.userID &&
+          inputValue.email &&
+          inputValue.password
+        )
+      ) {
         setError("Please enter user crdentials");
         return;
       }
-      // As we have set required in forms it might be unnecesaary but just might be a case
 
-      const response = await loginAuth(inputValue);
+      const response = await registerAuth(inputValue);
       if (response.success) {
         setIsSigned(true);
         setUserId(response.user_id);
@@ -50,13 +58,14 @@ export default function LoginPage() {
       setUserId("");
       setError(response.error);
     } catch (err) {
-      // Error sending data to loginAPI
-      console.log(`${err.message}`);
-      setError("Login attempt failed");
+      console.log("Error sending data to register API");
+      setError("Registration attempt failed");
     } finally {
       setInputValue({
         ...inputValue,
+        name: "",
         userID: "",
+        email: "",
         password: "",
       });
     }
@@ -69,8 +78,27 @@ export default function LoginPage() {
         className="w-full max-w-md bg-white p-8 rounded-lg shadow-md space-y-6"
       >
         <h2 className="text-2xl font-semibold text-center text-gray-800">
-          Login to Your Account
+          Create Your Account
         </h2>
+
+        <div>
+          <label
+            htmlFor="userName"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Name
+          </label>
+          <input
+            type="text"
+            id="userName"
+            name="name"
+            placeholder="John Doe"
+            value={inputValue.name}
+            onChange={handleInputValChange}
+            required
+            className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+          />
+        </div>
 
         <div>
           <label
@@ -85,6 +113,25 @@ export default function LoginPage() {
             name="userID"
             placeholder="john_doe"
             value={inputValue.userID}
+            onChange={handleInputValChange}
+            required
+            className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="johndoe@gmail.com"
+            value={inputValue.email}
             onChange={handleInputValChange}
             required
             className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
@@ -129,20 +176,20 @@ export default function LoginPage() {
         )}
         <button
           type="submit"
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
         >
-          Login
+          Register
         </button>
-        <div className="flex justify-center">
-          <p className="px-2">Sign up for a new account</p>
+                <div className="flex justify-center">
+          <p className="px-2">Already have an account</p>
           <button
             type="button"
             className="px-2 bg-purple-400 font-medium rounded-md text-sm text-white"
             onClick={() => {
-              navigate("/signup");
+              navigate("/login");
             }}
           >
-            Register
+            Login
           </button>
         </div>
       </form>

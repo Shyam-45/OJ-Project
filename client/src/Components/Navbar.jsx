@@ -1,13 +1,14 @@
 import { useState, useEffect, useContext } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Contexts/AuthContext";
-import { checkLogin, logoutUser } from "../Services/auth";
+import { logoutUser } from "../Services/user";
 
 export default function Navbar() {
   console.log("Nvabr component");
   const navigate = useNavigate();
   const { isSigned, setIsSigned, userId, setUserId } = useContext(AuthContext);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [logoutErr, setLogoutErr] = useState("");
 
   // useEffect(() => {
   //   async function loggedStatus() {
@@ -24,12 +25,18 @@ export default function Navbar() {
 
   const handleSignOut = async () => {
     try {
-      await logoutUser();
-      setUserId("");
-      setIsSigned(false);
-      setMobileOpen(false);
+      const response = await logoutUser();
+      if (response.success) {
+        setUserId("");
+        setIsSigned(false);
+        setLogoutErr("");
+        setMobileOpen(false);
+        return;
+      }
+      setLogoutErr(response.error);
     } catch (err) {
       console.error("Error while logging out", err);
+      setLogoutErr("Logout failed. Please try again");
     }
   };
 
