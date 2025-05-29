@@ -10,8 +10,12 @@ import {
   deleteProblem,
 } from "../controllers/problem.js";
 import { codeOutput, codeVerdict } from "../controllers/submission.js";
+import { authentincateUser } from "../middlewares/authenticate.js";
 
+const app = express();
 const router = express.Router();
+
+app.use(authentincateUser);
 
 // Show all problems
 router.get("", showProblemList);

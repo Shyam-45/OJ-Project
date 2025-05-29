@@ -9,37 +9,46 @@ export const showProblemList = async (req, res) => {
   try {
     const problemList = await Problem.find();
     console.log(`Problem list send to api`);
-    return res.json({ success: "true", problemList });
-    // return problemList;
+    return res.status(200).json({
+      success: "true",
+      message: "Problem list succesfully sent",
+      problemList,
+    });
   } catch (err) {
-    console.log("Error while fetching problem list.");
-    return res.json({
+    console.error("Error while fetching problem list", err);
+    return res.status(500).json({
       success: "false",
-      message: "Error while fetching problems from db",
+      error: "Error fetching problem list",
     });
   }
 };
 
 export const showProblem = async (req, res) => {
-  console.log(req.params);
+  // console.log(req.params);
 
   try {
     const { problemID } = req.params;
-    if (!problemID) {
-      return res.json({ message: "ProblemID missing" });
-      // Not sure if this is required
-    }
+    // if (!problemID) {
+    //   return res
+    //     .status(404)
+    //     .json({ success: false, error: "Problem not found." });
+    // }
 
     const problemInfo = await Problem.findOne({ problemID });
     if (!problemInfo) {
-      return res.json({ message: "Problem not fouund" });
+      return res
+        .status(404)
+        .json({ success: false, error: "Problem not found." });
     }
 
-    console.log("Problem sent to dashboard");
-    res.json({ message: `ProblemID: ${problemID}`, problemInfo });
+    // console.log("Problem sent to dashboard");
+    // console.log(problemInfo);
+    res
+      .status(200)
+      .json({ success: true, message: "Problem found", problemInfo });
   } catch (err) {
-    console.log(`Error while fetching problem, ${err}`);
-    res.json({ success: "failed", err });
+    console.error(`Error while fetching problem in db, ${err}`);
+    res.status(500).json({ success: false, error: "Something went wrong" });
   }
 };
 
@@ -52,14 +61,8 @@ export const createProblem = async (req, res) => {
       // here we will check if user is logged in
     }
 
-    const {
-      title,
-      description,
-      tags,
-      inputInfo,
-      outputInfo,
-      createdBy,
-    } = req.body;
+    const { title, description, tags, inputInfo, outputInfo, createdBy } =
+      req.body;
 
     console.log("Received text fields:");
     console.log({ title, description, tags, inputInfo, outputInfo, createdBy });
@@ -105,8 +108,14 @@ export const createProblem = async (req, res) => {
 
     console.log(createdBy);
 
-    const sampleInputOutputFile = parseSampleTestCases(sampleInputFile.path, sampleOutputFile.path);
-    console.log("Parsed sample input/output testcases:", sampleInputOutputFile.length);
+    const sampleInputOutputFile = parseSampleTestCases(
+      sampleInputFile.path,
+      sampleOutputFile.path
+    );
+    console.log(
+      "Parsed sample input/output testcases:",
+      sampleInputOutputFile.length
+    );
     console.log(sampleInputOutputFile);
     const inputOutputFile = parseTestCases(inputFile.path, outputFile.path);
     console.log("Parsed input/output testcases:", inputOutputFile.length);
