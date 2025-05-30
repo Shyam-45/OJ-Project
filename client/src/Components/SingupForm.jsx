@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../Contexts/AuthContext";
 import { registerAuth } from "../Services/user";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +26,14 @@ export default function SingupForm() {
     });
   };
 
+  useEffect(() => {
+    async function errorCheck() {
+      if (!error) return;
+      setTimeout(() => setError(""), 4000);
+    }
+    errorCheck();
+  }, [error]);
+
   const handleShowPass = () => {
     setShowPassword((prev) => !prev);
   };
@@ -34,7 +42,6 @@ export default function SingupForm() {
     event.preventDefault();
 
     try {
-      // Validate user input
       if (
         !(
           inputValue.name &&
@@ -58,7 +65,7 @@ export default function SingupForm() {
       setUserId("");
       setError(response.error);
     } catch (err) {
-      console.log("Error sending data to register API");
+      console.log(err);
       setError("Registration attempt failed");
     } finally {
       setInputValue({
@@ -72,19 +79,34 @@ export default function SingupForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 dark:bg-gray-700">
+      {error && (
+        <div
+          className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 flex items-center space-x-2 bg-red-50 border border-red-400 dark:border-red-600 text-red-800 dark:text-red-400 px-4 py-3 rounded-lg shadow-lg text-nowrap"
+          role="alert"
+        >
+          <span className="font-medium">{error}</span>
+          <button
+            type="button"
+            onClick={() => setError("")}
+            className="text-xl hover:text-red-600 dark:hover:text-red-200"
+          >
+            ❌
+          </button>
+        </div>
+      )}
       <form
         onSubmit={handleSubmission}
-        className="w-full max-w-md bg-white p-8 rounded-lg shadow-md space-y-6"
+        className="w-full max-w-md bg-white p-8 rounded-lg shadow-md space-y-6 dark:bg-gray-900"
       >
-        <h2 className="text-2xl font-semibold text-center text-gray-800">
+        <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-white">
           Create Your Account
         </h2>
 
         <div>
           <label
             htmlFor="userName"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-lg font-medium text-gray-700 dark:text-white"
           >
             Name
           </label>
@@ -96,33 +118,14 @@ export default function SingupForm() {
             value={inputValue.name}
             onChange={handleInputValChange}
             required
-            className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor="userID"
-            className="block text-sm font-medium text-gray-700"
-          >
-            User ID
-          </label>
-          <input
-            type="text"
-            id="userID"
-            name="userID"
-            placeholder="john_doe"
-            value={inputValue.userID}
-            onChange={handleInputValChange}
-            required
-            className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+            className="mt-1 block w-full border border-gray-300 rounded-full px-3 py-2 focus:outline-none focus:ring focus:border-blue-300 "
           />
         </div>
 
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-lg font-medium text-gray-700 dark:text-white"
           >
             Email
           </label>
@@ -134,14 +137,33 @@ export default function SingupForm() {
             value={inputValue.email}
             onChange={handleInputValChange}
             required
-            className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+            className="mt-1 block w-full border border-gray-300 rounded-full px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="userID"
+            className="block text-lg font-medium text-gray-700 dark:text-white"
+          >
+            User ID
+          </label>
+          <input
+            type="text"
+            id="userID"
+            name="userID"
+            placeholder="john_doe"
+            value={inputValue.userID}
+            onChange={handleInputValChange}
+            required
+            className="mt-1 block w-full border border-gray-300 rounded-full px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
           />
         </div>
 
         <div>
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-lg font-medium text-gray-700 dark:text-white"
           >
             Password
           </label>
@@ -152,7 +174,7 @@ export default function SingupForm() {
             value={inputValue.password}
             onChange={handleInputValChange}
             required
-            className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+            className="mt-1 block w-full border border-gray-300 rounded-full px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
           />
         </div>
 
@@ -166,25 +188,25 @@ export default function SingupForm() {
           />
           <label
             htmlFor="showPass"
-            className="ml-2 block text-sm text-gray-600"
+            className="ml-2 block text-base text-gray-600 dark:text-white"
           >
             Show Password
           </label>
         </div>
-        {error && (
-          <p className="mt-2 text-sm text-red-600 font-semibold">❌ {error}</p>
-        )}
+
         <button
           type="submit"
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          className="w-full flex justify-center py-2 px-4 text-xl border border-transparent rounded-full shadow-sm text-white bg-green-600 dark:text-white hover:bg-green-700 "
         >
           Register
         </button>
-                <div className="flex justify-center">
-          <p className="px-2">Already have an account</p>
+        <div className="flex justify-center">
+          <p className="px-2 text-lg text-nowrap dark:text-white">
+            Already have an account
+          </p>
           <button
             type="button"
-            className="px-2 bg-purple-400 font-medium rounded-md text-sm text-white"
+            className="px-2 bg-purple-400 font-medium rounded-md text-lg text-white"
             onClick={() => {
               navigate("/login");
             }}

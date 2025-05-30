@@ -1,39 +1,38 @@
 import { useEffect, useState } from "react";
-import Problem from "./Problem.jsx";
+import Problem from "../Components/Problem.jsx";
 import { getProblemList } from "../Services/problem.js";
 
-export default function Home() {
-  // const [problemList, setProblemList] = useState([]);
-  // const [fetchProblem, setFetchProblem] = useState(true);
-  // const [error, setError] = useState("");
+export default function ProblemPage() {
+  const [problemList, setProblemList] = useState([]);
+  const [fetchProblem, setFetchProblem] = useState(true);
+  const [error, setError] = useState("");
 
-  // useEffect(() => {
-  //   async function fetchProblemList() {
-  //     try {
-  //       const response = await getProblemList();
-  //       if (response.success) {
-  //         setProblemList(response.problem_list);
-  //         setError("");
-  //         return;
-  //       }
-  //       setProblemList([]);
-  //       setError(response.error);
-  //     } catch (err) {
-  //       // Error interacting with pronlemList API
-  //       console.log(`Error occurred : ${err}`);
-  //       setProblemList([]);
-  //       setError("Failed to get problem list");
-  //     } finally {
-  //       setFetchProblem(false);
-  //     }
-  //   }
-  //   fetchProblemList();
-  // }, []);
+  useEffect(() => {
+    async function fetchProblemList() {
+      try {
+        const response = await getProblemList();
+        if (response.success) {
+          setProblemList(response.problem_list);
+          setError("");
+          return;
+        }
+        setProblemList([]);
+        setError(response.error);
+      } catch (err) {
+        // Error interacting with pronlemList API
+        console.log(`Error occurred : ${err}`);
+        setProblemList([]);
+        setError("Failed to get problem list");
+      } finally {
+        setFetchProblem(false);
+      }
+    }
+    fetchProblemList();
+  }, []);
 
   return (
     <>
-    <div>I am home</div>
-      {/* {error && (
+      {error && (
         <p className="mt-2 text-sm text-red-600 font-semibold">❌ {error}</p>
       )}
       {fetchProblem ? (
@@ -61,7 +60,7 @@ export default function Home() {
             )}
           </div>
         </div>
-      )} */}
+      )}
     </>
   );
 }

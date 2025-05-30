@@ -1,27 +1,12 @@
-import { useState, useEffect, useContext } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
+import { NavLink } from "react-router-dom";
 import { AuthContext } from "../Contexts/AuthContext";
 import { logoutUser } from "../Services/user";
 
 export default function Navbar() {
-  console.log("Nvabr component");
-  const navigate = useNavigate();
-  const { isSigned, setIsSigned, userId, setUserId } = useContext(AuthContext);
+  const { setIsSigned, userId, setUserId } = useContext(AuthContext);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [logoutErr, setLogoutErr] = useState("");
-
-  // useEffect(() => {
-  //   async function loggedStatus() {
-  //     const status = (await checkLogin()).loggedIn;
-  //     if (!status) {
-  //       navigate("/login");
-  //       return;
-  //     }
-  //     setIsSigned(status);
-  //     navigate("/home");
-  //   }
-  //   loggedStatus();
-  // }, [isSigned]);
 
   const handleSignOut = async () => {
     try {
@@ -40,72 +25,66 @@ export default function Navbar() {
     }
   };
 
-  const links = (
-    <>
-      <NavLink
-        to={isSigned ? "/" : "/login"}
-        // to="/home"
-        className="block px-3 py-2 rounded hover:bg-gray-100"
-        onClick={() => setMobileOpen(false)}
-      >
-        Home
-      </NavLink>
-      <NavLink
-        to={`/user/${userId}`}
-        className="block px-3 py-2 rounded hover:bg-gray-100"
-        onClick={() => setMobileOpen(false)}
-      >
-        Profile
-      </NavLink>
-      {!isSigned ? (
-        <>
-          <Link
-            to="/login"
-            className="block px-3 py-2 rounded hover:bg-gray-100"
-            onClick={() => setMobileOpen(false)}
-          >
-            Log In
-          </Link>
-          <Link
-            to="/signup"
-            className="block px-3 py-2 rounded hover:bg-gray-100"
-            onClick={() => setMobileOpen(false)}
-          >
-            Register
-          </Link>
-        </>
-      ) : (
-        <button
-          onClick={handleSignOut}
-          className="w-full text-left px-3 py-2 rounded hover:bg-gray-100"
-        >
-          Sign Out
-        </button>
-      )}
-    </>
-  );
-
   return (
-    <nav className="bg-white border-b">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 flex items-center justify-between h-16">
-        <div className="text-2xl font-bold">myOnlineJudge</div>
-
-        <div className="hidden md:flex md:space-x-4">{links}</div>
-
-        <button
-          className="md:hidden text-2xl p-2 focus:outline-none"
-          onClick={() => setMobileOpen((o) => !o)}
-          aria-label="Toggle menu"
-        >
-          ☰
-        </button>
-      </div>
-
-      {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200">
-          <div className="px-2 pt-2 pb-4 space-y-1">{links}</div>
+    // fixed top-0 w-full
+    <div className="bg-white dark:bg-gray-600">
+      <nav className="fixed top-0 w-full lg:h-16 flex flex-col lg:flex-row items-center justify-between py-4 bg-white lg:rounded-full dark:bg-gray-800">
+        <div className="flex items-center justify-between w-full lg:basis-1/2 pl-10">
+          <NavLink
+            to="/"
+            className="text-xl lg:text-2xl  text-gray-900 dark:text-white w-3/5"
+          >
+            myOnlineJudge
+          </NavLink>
+          <div className="flex lg:justify-center justify-between items-center w-2/5 lg:w-1/5">
+            <div className="dark:text-white text-xl">☰</div>
+            <button
+              className="lg:hidden dark:text-white text-xl p-2 focus:outline-none"
+              onClick={() => setMobileOpen((o) => !o)}
+            >
+              ☰
+            </button>
+          </div>
         </div>
-      )}
-    </nav>
+
+        <div
+          className={`${
+            mobileOpen ? "flex" : "hidden"
+          } lg:flex flex-col lg:flex-row items-center justify-between basis-1/2 pr-10`}
+        >
+          <NavLink
+            className="px-4 text-xl mx-4 pt-2 pb-1 lg:py-1 text-gray-900 text-nowrap rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
+            to="/"
+          >
+            Home
+          </NavLink>
+
+          <NavLink
+            className="px-4 text-xl mx-4 py-1 text-gray-900 text-nowrap rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
+            to="/problem"
+          >
+            Problems
+          </NavLink>
+          <NavLink
+            className="px-4 text-xl mx-4 py-1 text-nowrap text-gray-900 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
+            to="#"
+          >
+            Compiler
+          </NavLink>
+          <NavLink
+            className="px-4 text-xl mx-4 py-1 text-nowrap text-gray-900 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
+            to={`/user/${userId}`}
+          >
+            Profile
+          </NavLink>
+          <NavLink
+            className="px-4 text-xl mx-4 py-1 text-nowrap rounded-full text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
+            onClick={handleSignOut}
+          >
+            Log Out
+          </NavLink>
+        </div>
+      </nav>
+    </div>
   );
 }

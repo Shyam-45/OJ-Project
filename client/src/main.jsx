@@ -15,6 +15,7 @@ import SolveProblemPage from "./Pages/SolveProblemPage.jsx";
 import SignupPage from "./Pages/SignupPage.jsx";
 import HomePage from "./Pages/HomePage.jsx";
 import ProfilePage from "./Pages/ProfilePage.jsx";
+import ProblemPage from "./Pages/ProblemPage.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,6 +27,7 @@ const router = createBrowserRouter(
         <Route path="/" element={<App />}>
           <Route index element={<HomePage />} />
           <Route path="home" element={<HomePage />} />
+                    <Route path="problem" element={<ProblemPage />} />
           <Route path="user/:userID" element={<ProfilePage />} />
         </Route>
       </Route>
