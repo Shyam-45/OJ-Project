@@ -4,29 +4,22 @@ export default function Problem({ problem }) {
   const navigate = useNavigate();
 
   const handleSolveProblem = (id) => {
-    console.log("Problem component");
-    console.log(`Problem with problem id: ${id} clicked`);
-    // if (!isLoggedIn) {
-    //   alert("Please log in first!");
-    //   navigate("/login");
-    //   return;
-    // }
-
     navigate(`/problem/${problem.problemID}`);
-
-    // Here we will show compiler page
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6 m-4 flex flex-col md:flex-row items-center justify-between transition hover:shadow-lg">
-      <div className="flex-1 text-center md:text-left">
-        <h3 className="text-xl font-bold text-gray-900">{problem.title}</h3>
+    <div className="flex justify-start items-center shadow-md py-4 my-2 hover:shadow-lg dark:bg-gray-800 rounded-xl">
+      <div className="w-3/5 pl-3 font-normal text-xl dark:text-gray-300">
+        {problem.title}
+      </div>
+      <div className="w-1/5 text-lg font-light mx-2 dark:text-white">
+        {problem.tags}
       </div>
       <button
-        className="mt-4 md:mt-0 px-5 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition"
+        className="w-1/5 text-xl py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white mx-2 dark:text-gray-200"
         onClick={() => handleSolveProblem(problem.problemID)}
       >
-        Solve
+        solve
       </button>
     </div>
   );

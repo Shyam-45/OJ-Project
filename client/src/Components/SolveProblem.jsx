@@ -149,113 +149,156 @@ export default function SolveProblem() {
       {problemErr ? (
         <div>{problemErr}</div>
       ) : (
-        <div className="flex flex-col md:flex-row">
-          <div className="w-full md:w-1/2 p-6">
-            <div className="bg-white rounded-lg shadow p-6 space-y-6">
+        <div className="flex flex-col lg:flex-row justify-between m-4">
+          <div className="div1 w-2/5 flex flex-col">
+            <div className="flex justify-between">
+              <span className="text-3xl font-bold mt-8 px-4 dark:text-gray-300">
+                {problem.title}
+              </span>
+              <span className="text-2xl dark:text-gray-300 mt-8 px-4 bg-gray-100 dark:bg-gray-700">
+                {problem.tags}
+              </span>
+            </div>
+            <div className="p-4">
+              <h3 className="font-medium text-2xl mt-4 dark:text-gray-300">Description</h3>
+              <p className="text-2xl mt-4 dark:text-gray-300">{problem.description}</p>
+            </div>
+            <div className="p-4">
+              <h3 className="text-2xl mt-4 dark:text-gray-300">Input</h3>
+              <p className="text-2xl mt-4 dark:text-gray-300">{problem.inputInfo}</p>
+            </div>
+            <div className="p-4">
+              <h3 className="text-2xl mt-4 dark:text-gray-300">Output</h3>
+              <p className="text-2xl mt-4 dark:text-gray-300">{problem.outputInfo}</p>
+            </div>
+            <div className="input_output w-3/5">
               <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-gray-800">
-                  {problem.title}
-                </h2>
-                <span className="bg-gray-100 text-gray-800 px-3 py-1 rounded text-sm">
-                  {problem.tags}
-                </span>
+                <span className="text-2xl w-1/2">Input</span>
+                <span className="text-2xl w-1/2">Output</span>
               </div>
-              <div className="bg-gray-50 p-4 rounded">
-                <h3 className="font-semibold mb-1">Description</h3>
-                <p className="text-gray-600">{problem.description}</p>
-              </div>
-              <div className="bg-gray-50 p-4 rounded">
-                <h3 className="font-semibold mb-1">Input</h3>
-                <p className="text-gray-600">{problem.inputInfo}</p>
-              </div>
-              <div className="bg-gray-50 p-4 rounded">
-                <h3 className="font-semibold mb-1">Output</h3>
-                <p className="text-gray-600">{problem.outputInfo}</p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {problem.sampleInputOutput.map((item) => (
-                  <div key={item.sioID} className="bg-gray-50 p-4 rounded">
-                    <h4 className="font-semibold">Input</h4>
-                    <pre className="text-gray-600 mb-2">{item.input}</pre>
-                    <h4 className="font-semibold">Output</h4>
-                    <pre className="text-gray-600">{item.output}</pre>
-                  </div>
-                ))}
-              </div>
+              {problem.sampleInputOutput.map((item) => (
+                <div key={item.sioID} className="flex justify-between items-center">
+                  {/* <h4 className="font-semibold">Input</h4> */}
+                  <pre className="">{item.input}</pre>
+                  {/* <h4 className="font-semibold">Output</h4> */}
+                  <pre className="">{item.output}</pre>
+                </div>
+              ))}
             </div>
           </div>
-
-          <div className="w-full md:w-1/2 p-6 flex flex-col">
-            <div className="bg-white rounded-lg shadow p-6 flex flex-col h-full">
-              <select
-                name="language"
-                value={language}
-                onChange={selectLanguage}
-                className="mb-4 p-2 border border-gray-300 rounded"
-              >
-                <option value="c">C</option>
-                <option value="cpp">C++</option>
-                <option value="py">Python</option>
-                <option value="js">Javascript</option>
-                <option value="java">Java</option>
-              </select>
-
-              <div className="flex-1 bg-gray-50 text-gray-800 p-4 rounded overflow-auto">
-                <Editor
-                  value={code}
-                  onValueChange={(code) => setCode(code)}
-                  highlight={highlightCode}
-                  padding={10}
-                  style={{
-                    fontFamily: "Fira code, Fira Mono, monospace",
-                    fontSize: 20,
-                    color: "#1a202c",
-                    backgroundColor: "#f7fafc",
-                  }}
-                  className="w-full h-full"
-                />
-              </div>
-              <div>
-                <div className="mt-4 flex space-x-4">
-                  <button
-                    type="button"
-                    className="flex-1 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    onClick={handleRun}
-                  >
-                    Run
-                  </button>
-                  <button
-                    type="button"
-                    className="flex-1 bg-green-600 text-white py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                    onClick={handleSubmit}
-                  >
-                    Submit
-                  </button>
-                </div>
-                <div className="mt-4">
-                  {verdict && (
-                    <p
-                      className={`text-center text-xl font-bold ${
-                        verdict === "FAIL" ? "text-red-500" : "text-green-600"
-                      }`}
-                    >
-                      {verdict}
-                    </p>
-                  )}
-                  {outputMessage && (
-                    <pre className="mt-2 p-4 bg-gray-100 rounded text-gray-800">
-                      {outputMessage}
-                    </pre>
-                  )}
-                  {outputErr && (
-                    <p className="mt-2 text-red-600 font-medium">{outputErr}</p>
-                  )}
-                </div>
-              </div>
-            </div>
+          <div className="w-3/5 flex flex-col">
+            <div className="compiler">compiler</div>
+            <div className="submissin_buttons">submission buttons</div>
           </div>
         </div>
       )}
     </>
   );
 }
+
+// <div className="flex flex-col md:flex-row">
+//   <div className="w-full md:w-1/2 p-6">
+//     <div className="bg-white rounded-lg shadow p-6 space-y-6">
+//       <div className="flex justify-between items-center">
+//         <h2 className="text-2xl font-bold text-gray-800">
+//           {problem.title}
+//         </h2>
+//         <span className="bg-gray-100 text-gray-800 px-3 py-1 rounded text-sm">
+//           {problem.tags}
+//         </span>
+//       </div>
+//       <div className="bg-gray-50 p-4 rounded">
+//         <h3 className="font-semibold mb-1">Description</h3>
+//         <p className="text-gray-600">{problem.description}</p>
+//       </div>
+//       <div className="bg-gray-50 p-4 rounded">
+//         <h3 className="font-semibold mb-1">Input</h3>
+//         <p className="text-gray-600">{problem.inputInfo}</p>
+//       </div>
+//       <div className="bg-gray-50 p-4 rounded">
+//         <h3 className="font-semibold mb-1">Output</h3>
+//         <p className="text-gray-600">{problem.outputInfo}</p>
+//       </div>
+//       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+//         {problem.sampleInputOutput.map((item) => (
+//           <div key={item.sioID} className="bg-gray-50 p-4 rounded">
+//             <h4 className="font-semibold">Input</h4>
+//             <pre className="text-gray-600 mb-2">{item.input}</pre>
+//             <h4 className="font-semibold">Output</h4>
+//             <pre className="text-gray-600">{item.output}</pre>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   </div>
+
+//   <div className="w-full md:w-1/2 p-6 flex flex-col">
+//     <div className="bg-white rounded-lg shadow p-6 flex flex-col h-full">
+//       <select
+//         name="language"
+//         value={language}
+//         onChange={selectLanguage}
+//         className="mb-4 p-2 border border-gray-300 rounded"
+//       >
+//         <option value="c">C</option>
+//         <option value="cpp">C++</option>
+//         <option value="py">Python</option>
+//         <option value="js">Javascript</option>
+//         <option value="java">Java</option>
+//       </select>
+
+//       <div className="flex-1 bg-gray-50 text-gray-800 p-4 rounded overflow-auto">
+//         <Editor
+//           value={code}
+//           onValueChange={(code) => setCode(code)}
+//           highlight={highlightCode}
+//           padding={10}
+//           style={{
+//             fontFamily: "Fira code, Fira Mono, monospace",
+//             fontSize: 20,
+//             color: "#1a202c",
+//             backgroundColor: "#f7fafc",
+//           }}
+//           className="w-full h-full"
+//         />
+//       </div>
+//       <div>
+//         <div className="mt-4 flex space-x-4">
+//           <button
+//             type="button"
+//             className="flex-1 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+//             onClick={handleRun}
+//           >
+//             Run
+//           </button>
+//           <button
+//             type="button"
+//             className="flex-1 bg-green-600 text-white py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+//             onClick={handleSubmit}
+//           >
+//             Submit
+//           </button>
+//         </div>
+//         <div className="mt-4">
+//           {verdict && (
+//             <p
+//               className={`text-center text-xl font-bold ${
+//                 verdict === "FAIL" ? "text-red-500" : "text-green-600"
+//               }`}
+//             >
+//               {verdict}
+//             </p>
+//           )}
+//           {outputMessage && (
+//             <pre className="mt-2 p-4 bg-gray-100 rounded text-gray-800">
+//               {outputMessage}
+//             </pre>
+//           )}
+//           {outputErr && (
+//             <p className="mt-2 text-red-600 font-medium">{outputErr}</p>
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   </div>
+// </div>

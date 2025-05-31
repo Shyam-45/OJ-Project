@@ -1,15 +1,16 @@
-import Navbar from "./Components/Navbar.jsx"
-import Footer from "./Components/Footer.jsx"
 import { Outlet } from "react-router-dom";
+import Navbar from "./Components/Navbar.jsx";
+import Footer from "./Components/Footer.jsx";
 
 function App() {
-  console.log("inside grp");
   return (
-    <>
-    <Navbar />
-    <Outlet></Outlet>
-    <Footer />
-    </>
+    <div className="flex flex-col min-h-screen dark:bg-gray-600">
+      <Navbar />
+      <main className="flex-grow pt-16 bg">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
   );
 }
 
