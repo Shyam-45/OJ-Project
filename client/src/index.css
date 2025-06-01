@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+.code-editor .token.operator,
+.code-editor .token.punctuation {
+  background-color: transparent !important;
+}
+
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
