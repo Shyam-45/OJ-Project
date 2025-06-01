@@ -26,9 +26,8 @@ export default function Navbar() {
   };
 
   return (
-    // fixed top-0 w-full
     <div className="bg-white dark:bg-gray-600">
-      <nav className="fixed top-0 w-full lg:h-16 flex flex-col lg:flex-row items-center justify-between py-4 border-2 dark:border-black bg-white lg:rounded-full dark:bg-gray-900">
+      <nav className="fixed top-0 w-full z-50 lg:h-16 flex flex-col lg:flex-row items-center justify-between py-4 border-2 dark:border-black bg-white lg:rounded-full dark:bg-gray-900">
         <div className="flex items-center justify-between w-full lg:basis-1/2 pl-10">
           <NavLink
             to="/"
@@ -70,7 +69,7 @@ export default function Navbar() {
           </NavLink>
           <NavLink
             className="px-4 text-xl mx-4 py-1 text-nowrap text-gray-900 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
-            to="#"
+            to="/compiler"
             onClick={() => setMobileOpen((o) => !o)}
           >
             Compiler
