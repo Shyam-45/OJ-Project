@@ -56,6 +56,8 @@ const problemSchema = new Schema({
   },
 });
 
+problemSchema.index({ createdBy: 1 });
+
 const Problem = mongoose.model("Problem", problemSchema);
 
 export default Problem;
