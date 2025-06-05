@@ -7,15 +7,15 @@ import {
   showProblemList,
   showProblem,
   createProblem,
-  deleteProblem,
+  deleteProblemAndTestcases,
+  getProblemAndTestcases
 } from "../controllers/problem.js";
-import { codeOutput, codeVerdict } from "../controllers/submission.js";
+import { customOutput, codeOutput, codeVerdict } from "../controllers/submission.js";
 import { authentincateUser } from "../middlewares/authenticate.js";
 
-const app = express();
 const router = express.Router();
 
-app.use(authentincateUser);
+router.use(authentincateUser);
 
 // Show all problems
 router.get("", showProblemList);
@@ -30,7 +30,7 @@ const upload = multer({ dest: uploadDir });
 
 // Create Problem route
 router.post(
-  "/newProblem",
+  "/new",
   upload.fields([
     { name: "sampleInputFile", maxCount: 1 },
     { name: "sampleOutputFile", maxCount: 1 },
@@ -40,13 +40,23 @@ router.post(
   createProblem
 );
 
+// Custom output route
+router.post("/customrun", customOutput);
+
 // Run problem route
 router.post("/:problemID/run", codeOutput);
 
 // Submit problem route
 router.post("/:problemID/submit", codeVerdict);
 
-// Read & delete Problem route
-router.route("/:problemID").get(showProblem).delete(deleteProblem);
+// View problem route for problem setter
+router.get("/:problemID/view", getProblemAndTestcases);
+
+// Delete problem route
+router.delete("/:problemID/:userid", deleteProblemAndTestcases);
+
+// Read problem route
+router.get("/:problemID", showProblem);
+
 
 export default router;
