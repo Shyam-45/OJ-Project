@@ -32,7 +32,9 @@ export const getProblemList = async () => {
 
 export const getProblemInfo = async (id) => {
   try {
-    const response = await axios.get(`${backend_url}/problem/${id}`);
+    const response = await axios.get(`${backend_url}/problem/${id}`, {
+      withCredentials: true,
+    });
     // Avoiding redundant checks
     return { success: true, problemInfo: response.data.problemInfo };
   } catch (err) {
@@ -41,6 +43,22 @@ export const getProblemInfo = async (id) => {
       return err.response.data;
     }
     return { success: false, error: "Something went wrong" };
+  }
+};
+
+export const getCustomOutput = async (data) => {
+  try {
+    const response = await axios.post(
+      `${backend_url}/problem/customrun`,
+      data,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (err) {
+    console.log("Problem while interacting with backend for RUN");
+    return { success: false, error: "something went wrong" };
   }
 };
 
@@ -56,7 +74,7 @@ export const getOutput = async (id, data) => {
     return response.data;
   } catch (err) {
     console.log("Problem while interacting with backend for RUN");
-    return { success: "fail", error: "something went wrong" };
+    return { success: false, error: "something went wrong" };
   }
 };
 
@@ -71,20 +89,16 @@ export const getVerdict = async (id, data) => {
     );
     return response.data;
   } catch (err) {
-    console.log("Problem while interacting with backend for RUN");
-    return { success: "fail", error: "something went wrong" };
+    console.log("Problem while interacting with backend for SUBMIT");
+    return { success: false, error: "something went wrong" };
   }
 };
 
 export const sendNewProblem = async (data) => {
   try {
-    const response = await axios.post(
-      `${backend_url}/problem/newProblem`,
-      data,
-      {
-        withCredentials: true,
-      }
-    );
+    const response = await axios.post(`${backend_url}/problem/new`, data, {
+      withCredentials: true,
+    });
     console.log(response.data);
     return response.data;
   } catch (err) {
@@ -95,5 +109,36 @@ export const sendNewProblem = async (data) => {
       success: false,
       error: "NewProblm API encountered issue while interacting with backend",
     };
+  }
+};
+
+export const deleteProblem = async (p_id, u_id) => {
+  try {
+    const response = await axios.delete(
+      `${backend_url}/problem/${p_id}/${u_id}`,
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (err) {
+    console.log(err);
+    return err.response.data;
+  }
+};
+
+export const getProblemAndTestcases = async (p_id) => {
+  try {
+    // console.log("req send");
+    // console.log(p_id);
+    const response = await axios.get(`${backend_url}/problem/${p_id}/view`, {
+      withCredentials: true,
+    });
+    console.log(response.data);
+        return (response.data);
+  } catch (err) {
+        console.log(`Error , ${err.message}`);
+    if (err.response.status === 404) {
+      return err.response.data;
+    }
+    return { success: false, error: "Something went wrong" };
   }
 };
