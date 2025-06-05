@@ -76,7 +76,7 @@ export default function Navbar() {
           </NavLink>
           <NavLink
             className="px-4 text-xl mx-4 py-1 text-nowrap text-gray-900 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
-            to={`/user/${userId}`}
+            to={`/${userId}`}
             onClick={() => setMobileOpen((o) => !o)}
           >
             Profile
