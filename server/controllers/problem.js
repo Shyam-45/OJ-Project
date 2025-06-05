@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 import Problem from "../models/Problem.js";
 import Testcase from "../models/Testcase.js";
@@ -24,7 +25,7 @@ export const showProblemList = async (req, res) => {
 };
 
 export const showProblem = async (req, res) => {
-  // console.log(req.params);
+  console.log(req.params);
 
   try {
     const { problemID } = req.params;
@@ -43,12 +44,14 @@ export const showProblem = async (req, res) => {
 
     // console.log("Problem sent to dashboard");
     // console.log(problemInfo);
-    res
+    return res
       .status(200)
       .json({ success: true, message: "Problem found", problemInfo });
   } catch (err) {
     console.error(`Error while fetching problem in db, ${err}`);
-    res.status(500).json({ success: false, error: "Something went wrong" });
+    return res
+      .status(500)
+      .json({ success: false, error: "Something went wrong" });
   }
 };
 
@@ -154,54 +157,75 @@ export const createProblem = async (req, res) => {
   }
 };
 
-export const deleteProblem = async (req, res) => {
-  //   console.log(req.body);
-
-  // Get info from req.body
+export const getProblemAndTestcases = async (req, res) => {
   try {
-    if (false) {
-      // here we will check if user is logged in
+    const { problemID } = req.params;
+
+    const problemInfo = await Problem.findOne({ problemID });
+    if (!problemInfo) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Problem not found." });
     }
 
-    const problemID = req.params.problemID;
-    if (!problemID) {
-      return res.json({ message: "ProblemID missing" });
-      // Not sure if this is required
+    const testcaseInfo = await Testcase.findOne({ problemID });
+    if (!testcaseInfo) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Test cases not found." });
     }
 
-    const { email } = req.body;
-    // get email of logged in user from cookie
-    console.log(`Delete request by ${email}`);
+    const payload = { problemInfo, testcaseInfo };
+    return res.status(200).json({
+      success: true,
+      message: "Problem & testcase successfully fetched",
+      payload,
+    });
+  } catch (err) {
+    console.log(err);
 
-    // Check if user and problem creater are same
-    const problemCreater = await Problem.findOne({ problemID });
-    if (!problemCreater) {
-      return res.json({ message: "Problem not found" });
+    console.error(`Error while fetching problem and test cases in db, ${err}`);
+    res.status(500).json({ success: false, error: "Something went wrong" });
+  }
+};
+
+export const deleteProblemAndTestcases = async (req, res) => {
+  const session = await mongoose.startSession();
+  try {
+    const { problemID, userid } = req.params;
+    const { userId } = req; // Stored in jwt token
+
+    const problemData = await Problem.findOne({ problemID });
+
+    if (!problemData) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Problem not found" });
     }
 
-    console.log(`Problem created by ${problemCreater.createdBy.email}`);
-    if (problemCreater.createdBy.email !== email) {
+    // Authorization check
+    if (userId !== userid || problemData.createdBy !== userid) {
       return res.status(403).json({
-        message: "User does not have permission to delete this problem.",
+        succes: false,
+        error: "You do not have permission to delete this problem",
       });
     }
 
-    // Delete from problems collection
-    const deleteProblemInfo = await Problem.deleteOne({ problemID });
-    // if (deleteProblemInfo.deletedCount === 0) {
-    //     return res.json({message: "Issue while deleting problem from problems collection"});
-    // }
+    await session.withTransaction(async () => {
+      await Problem.deleteOne({ problemID }, { session });
+      await Testcase.deleteOne({ problemID }, { session });
+    });
 
-    // Delete corresponding testcase
-    const deleteTestcaseInfo = await Testcase.deleteOne({ problemID });
-    // if (deleteTestcaseInfo.deletedCount === 0) {
-    //     return res.json({message: "Failed to delete test case from testcases collection"});
-    // }
-
-    console.log("Problem deletd from DB");
-    res.json({ message: "Problem deleted successfully" });
+    return res.status(200).json({
+      success: true,
+      message: "Problem and corresponding test case deleted successfully",
+    });
   } catch (err) {
     console.log(`Error occurred while deleting problem, ${err}`);
-    res.json({ success: "failed", err });
+    return res
+      .status(500)
+      .json({ success: false, error: "Internal server errror" });
+  } finally {
+    session.endSession();
   }
 };
