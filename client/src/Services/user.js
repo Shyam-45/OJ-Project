@@ -100,3 +100,41 @@ export const logoutUser = async () => {
     };
   }
 };
+
+export const getUserInfo = async (user_id) => {
+  try {
+    console.log(user_id);
+    const response = await axios.get(`${backend_url}/user/${user_id}`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (err) {
+    if (
+      err.response.status === 403 ||
+      err.response.status === 404 ||
+      err.response.status === 500
+    ) {
+      return err.response.data;
+    }
+
+    console.log(err);
+    return { success: false, error: "Something went wrong" };
+  }
+};
+
+export const getUserProblem = async (user_id) => {
+  try {
+    const response = await axios.get(`${backend_url}/user/${user_id}/problem`, {
+      withCredentials: true,
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    if (err.response.status === 403 || err.response.status === 404) {
+      return err.response.data;
+    }
+
+    console.log(err);
+    return { success: false, error: "Something went wrong" };
+  }
+};
