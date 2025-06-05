@@ -1,8 +1,12 @@
 import express from "express";
-import { userLogin, userSingup, identifyUser } from "../controllers/user.js";
+import {
+  userLogin,
+  userSingup,
+  identifyUser,
+  getUserProblemList,
+} from "../controllers/user.js";
 import { authentincateUser } from "../middlewares/authenticate.js";
 
-const app = express();
 const router = express.Router();
 
 // Login route
@@ -11,10 +15,7 @@ router.post("/login", userLogin);
 // Register route
 router.post("/register", userSingup);
 
-app.use(authentincateUser);
-
-// Identify User route
-router.get("/me", identifyUser);
+router.use(authentincateUser);
 
 // Log Out route
 router.get("/logout", (req, res) => {
@@ -24,5 +25,11 @@ router.get("/logout", (req, res) => {
     .status(200)
     .json({ success: true, message: "Logged out successfully" });
 });
+
+// Individual user problem list route
+router.get("/:userid/problem", getUserProblemList);
+
+// Identify User route
+router.get("/:userid", identifyUser);
 
 export default router;
