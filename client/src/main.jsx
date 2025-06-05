@@ -17,6 +17,8 @@ import HomePage from "./Pages/HomePage.jsx";
 import ProfilePage from "./Pages/ProfilePage.jsx";
 import ProblemPage from "./Pages/ProblemPage.jsx";
 import CompilerPage from "./Pages/CompilerPage.jsx";
+import AddProblem from "./Pages/AddProblem.jsx";
+import ViewProblemPage from "./Pages/ViewProblemPage.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,8 +32,10 @@ const router = createBrowserRouter(
           <Route index element={<HomePage />} />
           <Route path="home" element={<HomePage />} />
           <Route path="problem" element={<ProblemPage />} />
-          <Route path="user/:userID" element={<ProfilePage />} />
-          <Route path="/compiler" element={<CompilerPage />} />
+          <Route path=":userID/addproblem" element={<AddProblem />} />
+          <Route path=":userID/:problemID/view" element={<ViewProblemPage />} />
+          <Route path=":userID" element={<ProfilePage />} />
+          <Route path="compiler" element={<CompilerPage />} />
         </Route>
       </Route>
     </>
