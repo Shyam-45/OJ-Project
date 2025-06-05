@@ -1,16 +1,24 @@
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import Problem from "../models/Problem.js";
 
 dotenv.config();
 const SECRET_KEY_JWT = process.env.SECRET_KEY_JWT;
 
 export const identifyUser = async (req, res) => {
   try {
-    const { userid } = req.body;
+    const { userid } = req.params;
+    const { userId } = req; // Stored in jwt token
+    // console.log(userid);
+    // console.log(userId);
+
+    // Authorization
+    if (userid !== userId) {
+      return res.status(403).json({ success: false, error: "Access Denied" });
+    }
+
     const userInfo = await User.findOne({ userID: userid });
 
     if (!userInfo) {
@@ -27,6 +35,7 @@ export const identifyUser = async (req, res) => {
       email: userInfo.email,
     });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ success: false, error: "Something went wrong" });
   }
 };
@@ -159,5 +168,30 @@ export const userSingup = async (req, res) => {
       success: false,
       message: "Internal Server Error.",
     });
+  }
+};
+
+export const getUserProblemList = async (req, res) => {
+  try {
+    const { userid } = req.params;
+    const { userId } = req; // Stored in jwt token
+
+    if (userid !== userId) {
+      return res.status(403).json({
+        success: false,
+        error: "You don't have access to these resources.",
+      });
+    }
+
+    const problems = await Problem.find({ createdBy: userId }).sort({ _id: -1 });
+    return res
+      .status(201)
+      .json(
+        { success: true, message: "Problem list found successfully",
+        problems}
+      );
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, error: "Something went wrong" });
   }
 };
