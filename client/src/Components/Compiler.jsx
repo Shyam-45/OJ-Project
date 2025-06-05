@@ -22,7 +22,7 @@ export default function Compiler() {
   const [customInput, setCustomInput] = useState("");
   // const [outputMessage, setOutputMessage] = useState("");
   const [outputErr, setOutputErr] = useState("");
-  const [customOutput, setCustomOutput] = useState("5\n2 5\n3 5");
+  const [customOutput, setCustomOutput] = useState("");
 
   const languageMap = {
     c: "c",
@@ -80,6 +80,10 @@ export default function Compiler() {
       // if (count != total) {
       //   message = `${count} out of ${total} sample test case passed`;
       // }
+      if ((response.message) === "") {
+        setCustomOutput("Programme didn't print anything");
+        return;
+      }
       setCustomOutput(response.message);
       // setOutputMessage(message);
       setOutputErr("");
