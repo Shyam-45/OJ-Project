@@ -35,11 +35,12 @@ export default function SolveProblem() {
   const [problemErr, setProblemErr] = useState("");
   const [outputErr, setOutputErr] = useState("");
   const [customOutput, setCustomOutput] = useState(
-    `5
-2 5
-3 5`
+    
   );
 
+//   `5
+// 2 5
+// 3 5`
   useEffect(() => {
     async function fetchProblem() {
       try {
@@ -143,7 +144,7 @@ export default function SolveProblem() {
       setOutputMessage(message);
       setOutputErr("");
     } catch (error) {
-      console.log("Problem in receiving req from run {language, code}");
+      console.log("Problem in receiving req from submit {language, code}");
       return;
     }
   };
@@ -228,7 +229,8 @@ export default function SolveProblem() {
                 </button>
                 <button
                   type="button"
-                  className="disabled w-1/5 text-nowrap border-2 my-4 bg-purple-500 text-white text-lg rounded-full pl-4 pr-24"
+                  className="disabled w-1/5 text-nowrap border-2 my-4 bg-purple-500 text-white text-lg rounded-full pl-4 pr-24 disabled:bg-gray-300"
+                  disabled
                 >
                   AI Review
                 </button>
