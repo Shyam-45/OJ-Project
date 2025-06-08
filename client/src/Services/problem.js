@@ -73,7 +73,9 @@ export const getOutput = async (id, data) => {
     );
     return response.data;
   } catch (err) {
-    console.log("Problem while interacting with backend for RUN");
+    if (err.response.status === 400) {
+      return { success: false, error: err.response.data.error };
+    }
     return { success: false, error: "something went wrong" };
   }
 };
@@ -133,9 +135,9 @@ export const getProblemAndTestcases = async (p_id) => {
       withCredentials: true,
     });
     console.log(response.data);
-        return (response.data);
+    return response.data;
   } catch (err) {
-        console.log(`Error , ${err.message}`);
+    console.log(`Error , ${err.message}`);
     if (err.response.status === 404) {
       return err.response.data;
     }
