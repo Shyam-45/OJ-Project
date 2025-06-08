@@ -37,8 +37,7 @@ export const customOutput = async(req, res) => {
 export const codeOutput = async (req, res) => {
   const { problemID } = req.params;
   const { language = "cpp", code } = req.body;
-
-  if (code === undefined) {
+  if ((code === undefined) || ( (code.trim()) === "")) {
     return res
       .status(400)
       .json({ success: false, error: "please enter the code" });
@@ -56,11 +55,10 @@ export const codeOutput = async (req, res) => {
       withCredentials: true,
     });
     const response_data = response.data;
-    console.log(response_data);
     return res.status(200).json(response_data);
   } catch (err) {
-    console.error("Error while running code: ", err.message);
-    res.status(500).json({ success: false, error: err.message });
+    console.error("Error while sending request to compiler url: ", err.message);
+    res.status(500).json({ success: false, error: "something went wrong"});
   }
 };
 
