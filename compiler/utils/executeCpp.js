@@ -3,7 +3,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { spawn } from "child_process";
 
-// Get __filename and __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -19,10 +18,8 @@ const time_limit = 1000; // 1 second
 function spawnWithCapture(command, args, inputBuffer = null) {
   let killedForTimeout = false;
 
-  // Start the child:
   const proc = spawn(command, args, { stdio: ["pipe", "pipe", "pipe"] });
 
-  // If inputBuffer is given, write it to stdin and close stdin:
   if (inputBuffer) {
     proc.stdin.write(inputBuffer);
   }
@@ -37,14 +34,12 @@ function spawnWithCapture(command, args, inputBuffer = null) {
     stderr += chunk.toString();
   });
 
-  // Promise that resolves when the child exits:
   const promise = new Promise((resolve) => {
     proc.on("close", (code) => {
       resolve({ code, stdout, stderr, killedForTimeout });
     });
   });
 
-  // Attach a helper to kill for timeout:
   proc.killForTimeout = () => {
     killedForTimeout = true;
     proc.kill("SIGKILL");
@@ -54,7 +49,7 @@ function spawnWithCapture(command, args, inputBuffer = null) {
 }
 
 export const executeCpp = async (filePath, sampleInputContent) => {
-  console.log("cpp fille");
+  // console.log("cpp fille");
   const jobId = path.basename(filePath).split(".")[0];
   const exeFileName = `${jobId}.exe`;
   const exeFile = path.join(dirOutput, exeFileName);
@@ -62,7 +57,6 @@ export const executeCpp = async (filePath, sampleInputContent) => {
 
   try {
     const stats = await fs.stat(filePath);
-    console.log(stats.size);
     if (stats.size > max_source_code_size) {
       return {
         success: false,
@@ -71,7 +65,6 @@ export const executeCpp = async (filePath, sampleInputContent) => {
     }
 
     await fs.writeFile(inputFilePath, sampleInputContent);
-
     const { promise: compilePromise } = spawnWithCapture("g++", [
       filePath,
       "-o",
@@ -82,9 +75,7 @@ export const executeCpp = async (filePath, sampleInputContent) => {
     if (compileCode !== 0) {
       return { success: false, error: compileErr };
     }
-    console.log("code compiled successfully");
     const inputBuffer = await fs.readFile(inputFilePath);
-    console.log(inputBuffer);
 
     const { procRef: runProc, promise: runPromise } = spawnWithCapture(
       exeFile,
@@ -96,7 +87,6 @@ export const executeCpp = async (filePath, sampleInputContent) => {
       runProc.killForTimeout();
     }, time_limit);
 
-    // Wait for the process to exit (either normally or by our function):
     const { code, stdout, stderr, killedForTimeout } = await runPromise;
 
     clearTimeout(timer);
@@ -107,11 +97,11 @@ export const executeCpp = async (filePath, sampleInputContent) => {
     if (code !== 0) {
       return { success: false, error: stderr || `Exited with code ${code}` };
     }
-    console.log(98);
-    console.log(stdout);
     return { success: true, message: stdout };
   } catch (err) {
-    return { success: false, error: err.message };
+    console.error("Error while running executeCpp");
+    console.log(err.message);
+    return { success: false, error: "something went wrong" };
   } finally {
     await Promise.all([
       fs.unlink(inputFilePath).catch(() => {}),
