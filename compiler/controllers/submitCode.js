@@ -28,7 +28,6 @@ export const submitCode = async (req, res) => {
             output = await executeCpp(filePath, item.inputFile);
             break;
           case "py":
-            console.log("Python file received");
             output = await executePy(filePath, item.inputFile);
             break;
           case "js":
@@ -49,15 +48,11 @@ export const submitCode = async (req, res) => {
         }
 
         if (!output.success) {
-          return res
-            .status(200)
-            .json({ success: false, filePath, error: output.error });
+          return res.status(200).json({ success: false, error: output.error });
         }
 
         const userOutput = output.message.replace(/\r\n/g, "\n").trim();
-        const expectedOutput = item.outputFile
-          .replace(/\r\n/g, "\n")
-          .trim();
+        const expectedOutput = item.outputFile.replace(/\r\n/g, "\n").trim();
 
         if (!(userOutput === expectedOutput)) {
           break;
@@ -65,27 +60,24 @@ export const submitCode = async (req, res) => {
         count++;
       }
     } catch (err) {
-      output = { success: false, error: err };
+      console.error(err);
+      output = { success: false, error: "something went wrong" };
     } finally {
-      // console.log(filePath);
       await Promise.all([fs.unlink(filePath).catch(() => {})]);
     }
 
     if (!output.success) {
-      return res
-        .status(200)
-        .json({ success: false, filePath, error: output.error });
+      return res.status(200).json({ success: false, error: output.error });
     }
 
     return res.status(200).json({
       success: true,
-      filePath,
       count,
       total: `${inputOutput.length}`,
       message: output.message,
     });
   } catch (err) {
     console.error("Error while running code: ", err.message);
-    res.status(500).json({ success: false, filePath, error: err.message });
+    res.status(500).json({ success: false, error: "something went wrong" });
   }
 };
