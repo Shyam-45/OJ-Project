@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getUserInfo, getUserProblem } from "../Services/user";
-import ProfileProblem from "../Components/ProfileProblem";
+import { getUserInfo, getUserProblem } from "../services/user.js";
+import ProfileProblem from "../components/ProfileProblem.jsx";
 
 export default function ProfilePage() {
   const navigate = useNavigate();

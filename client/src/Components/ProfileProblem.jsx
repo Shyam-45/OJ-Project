@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { deleteProblem } from "../Services/problem";
+import { deleteProblem } from "../services/problem";
 
 export default function ProfileProblem({ problem, u_id, onDelete }) {
   const navigate = useNavigate();

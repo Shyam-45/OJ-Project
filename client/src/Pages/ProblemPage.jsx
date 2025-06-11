@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Problem from "../Components/Problem.jsx";
-import { getProblemList } from "../Services/problem.js";
+import Problem from "../components/Problem.jsx";
+import { getProblemList } from "../services/problem.js";
 
 export default function ProblemPage() {
   const [problemList, setProblemList] = useState([]);

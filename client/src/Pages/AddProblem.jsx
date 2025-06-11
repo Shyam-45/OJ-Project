@@ -1,4 +1,4 @@
-import NewProblemForm from "../Components/NewProblemForm";
+import NewProblemForm from "../components/NewProblemForm";
 
 export default function AddProblem() {
 

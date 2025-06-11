@@ -57,7 +57,9 @@ export const getCustomOutput = async (data) => {
     );
     return response.data;
   } catch (err) {
-    console.log("Problem while interacting with backend for RUN");
+    if (err.response.status === 400) {
+      return { success: false, error: err.response.data.error };
+    }
     return { success: false, error: "something went wrong" };
   }
 };
@@ -91,7 +93,9 @@ export const getVerdict = async (id, data) => {
     );
     return response.data;
   } catch (err) {
-    console.log("Problem while interacting with backend for SUBMIT");
+    if (err.response.status === 400) {
+      return { success: false, error: err.response.data.error };
+    }
     return { success: false, error: "something went wrong" };
   }
 };

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { sendNewProblem } from "../Services/problem";
+import { sendNewProblem } from "../services/problem";
 
 export default function NewProblemForm() {
   console.log("Profile component");

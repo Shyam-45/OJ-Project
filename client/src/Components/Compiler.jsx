@@ -13,16 +13,17 @@ import {
   javaSample,
   jsSample,
   cppSample,
-} from "../Utils/sampleCode.js";
-import { getCustomOutput } from "../Services/problem.js";
+} from "../utils/sampleCode.js";
+import { getCustomOutput } from "../services/problem.js";
 
 export default function Compiler() {
   const [language, setLanguage] = useState("cpp");
   const [code, setCode] = useState(cppSample);
   const [customInput, setCustomInput] = useState("");
-  // const [outputMessage, setOutputMessage] = useState("");
   const [outputErr, setOutputErr] = useState("");
   const [customOutput, setCustomOutput] = useState("");
+  const [aiReview, setAiReview] = useState(false);
+  const [disableCustomRun, setDisableCustomRun] = useState(false);
 
   const languageMap = {
     c: "c",
@@ -59,28 +60,22 @@ export default function Compiler() {
 
   const handleCustomInput = (event) => {
     setCustomInput(event.target.value);
-    // console.log(event.target.value);
   };
 
   const handleCustomRun = async () => {
-    const inputValue = (customInput || " ");
-    const payload = { language, code, inputValue};
+    const inputValue = customInput || " ";
+    const payload = { language, code, inputValue };
+    setDisableCustomRun(true);
     try {
-      // setOutputMessage("");
-      setCustomOutput("");
-      setOutputErr("");
+      // setCustomOutput("");
+      // setOutputErr("");
       const response = await getCustomOutput(payload);
-      console.log(response);
+      // console.log(response);
       if (!response.success) {
         setOutputErr(response.error);
         return;
       }
-      // const { count, total } = response;
-      // let message = `All sample test cases passed`;
-      // if (count != total) {
-      //   message = `${count} out of ${total} sample test case passed`;
-      // }
-      if ((response.message) === "") {
+      if (response.message === "") {
         setCustomOutput("Programme didn't print anything");
         return;
       }
@@ -88,8 +83,14 @@ export default function Compiler() {
       // setOutputMessage(message);
       setOutputErr("");
     } catch (error) {
-      console.log("Problem in receiving req from run {language, code}");
+      console.log(
+        "Problem in receiving req from custom run {language, code, inputValue}"
+      );
+      setOutputErr("Something went wrong");
       return;
+    } finally {
+      setDisableCustomRun(false);
+      setAiReview(false);
     }
   };
 
@@ -112,20 +113,21 @@ export default function Compiler() {
                 <option value="java">Java</option>
               </select>
             </div>
-            <div className="w-full h-[575px] overflow-auto px-4">
+            <div className="w-full h-[500px] overflow-auto px-4">
               <Editor
                 value={code}
                 onValueChange={(code) => setCode(code)}
                 highlight={highlightCode}
                 padding={10}
-                className="code-editor text-2xl bg-gray-100 dark:bg-gray-800 dark:text-gray-300 w-full min-h-full border-red-500 border-4"
+                className="code-editor text-xl bg-gray-100 dark:bg-gray-800 dark:text-gray-300 w-full min-h-full border-red-500 border-4"
               />
             </div>
           </div>
           <div className="flex flex-row justify-between mx-4">
             <button
               type="button"
-              className="border-2 rounded-full my-2 py-2 px-8 text-2xl  bg-blue-600 hover:bg-blue-800 text-white"
+              className="border-2 rounded-full my-2 py-2 px-8 text-xl  bg-blue-600 hover:bg-blue-800 text-white disabled:bg-gray-300"
+              disabled={disableCustomRun}
               onClick={handleCustomRun}
             >
               Run
@@ -133,7 +135,7 @@ export default function Compiler() {
             <button
               type="button"
               className="text-xl py-2 my-2 px-4 rounded-full border-2 bg-indigo-600 hover:bg-indigo-700 text-white mx-2 dark:text-gray-200 disabled:bg-gray-300"
-              disabled
+              disabled={!aiReview}
               //   onClick={handleAIReview}
             >
               AI Review
@@ -142,40 +144,35 @@ export default function Compiler() {
         </div>
         <div className="div_right lg:w-1/2 flex flex-col ">
           <div className="cus_inp m-4 border-4 bg-slate-100 dark:bg-slate-700 dark:border-slate-500">
-            <h3 className="text-lg font-medium p-2 dark:text-gray-300">
+            <h3 className="text-base font-medium p-2 dark:text-gray-300">
               Custom Input
             </h3>
             <textarea
-              rows={10}
+              rows={5}
               placeholder="Type your input here..."
               // name="customInput"
               value={customInput}
               onChange={handleCustomInput}
-              className="text-xl w-full resize-none rounded-lg px-4 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0"
+              className="text-lg w-full resize-none rounded-lg px-4 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0"
             />
           </div>
           <div className="cus_inp m-4 border-4 min-h-48 max-h-96 bg-slate-100 dark:bg-slate-700 dark:border-slate-500">
-            <h3 className="text-lg font-medium p-2 dark:text-gray-300">
+            <h3 className="text-base font-medium p-2 dark:text-gray-300">
               Output
             </h3>
-            <pre className="px-4 my-4 text-xl break-words dark:text-gray-300 ">
+            <pre className="px-4 my-4 text-lg break-words dark:text-gray-300 ">
               {customOutput}
             </pre>
           </div>
           <div className="mt-4 mr-4 bg-gray-100 dark:bg-gray-800">
-            {/* {outputMessage && (
-              <pre className="mt-2 p-4 text-xl rounded dark:text-gray-300 break-words whitespace-normal">
-                {outputMessage}
-              </pre>
-            )} */}
             {outputErr && (
-              <p className="mt-2 px-4 text-lg text-red-600 font-medium break-words whitespace-normal">
+              <p className="my-2 p-2 text-base h-[100px] overflow-y-auto text-red-600 font-medium break-words whitespace-normal">
                 {outputErr}
               </p>
             )}
           </div>
           <div className="cus_inp m-4 border-4 min-h-36 max-h-96 bg-slate-100 dark:bg-slate-700 dark:border-slate-500">
-            <h3 className="text-lg font-medium p-2 break-words  dark:text-gray-300">
+            <h3 className="text-base font-medium p-2 break-words  dark:text-gray-300">
               Code review by AI will appear here
             </h3>
           </div>

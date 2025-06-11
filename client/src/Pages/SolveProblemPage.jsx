@@ -1,5 +1,5 @@
-import SolveProblem from "../Components/SolveProblem.jsx";
-import Navbar from "../Components/Navbar.jsx";
+import SolveProblem from "../components/SolveProblem.jsx";
+import Navbar from "../components/Navbar.jsx";
 
 export default function SolveProblemPage() {
   return (

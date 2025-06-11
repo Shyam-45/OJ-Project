@@ -1,18 +1,19 @@
 import { useEffect } from "react";
 import { createContext, useState } from "react";
-import { checkLogin } from "../Services/auth";
+import { checkLogin } from "../services/auth";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isSigned, setIsSigned] = useState();
   const [userId, setUserId] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loggedStatus() {
       const response = await checkLogin();
-      if (!(response.loggedIn)) {
+      if (!response.loggedIn) {
         setIsSigned(false);
         setUserId("");
       } else {
@@ -40,7 +41,16 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isSigned, setIsSigned, userId, setUserId, loading, setLoading }}
+      value={{
+        isSigned,
+        setIsSigned,
+        userId,
+        setUserId,
+        loading,
+        setLoading,
+        darkMode,
+        setDarkMode,
+      }}
     >
       {children}
     </AuthContext.Provider>

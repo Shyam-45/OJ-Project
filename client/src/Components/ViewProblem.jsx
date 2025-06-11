@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProblemAndTestcases } from "../Services/problem";
+import { getProblemAndTestcases } from "../services/problem";
 import InputOutput from "./InputOutput";
 
 export default function ViewProblem() {

@@ -1,4 +1,4 @@
-import ViewProblem from "../Components/ViewProblem";
+import ViewProblem from "../components/ViewProblem";
 
 export default function ViewProblemPage() {
   return (

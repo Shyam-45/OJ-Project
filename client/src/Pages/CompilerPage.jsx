@@ -1,4 +1,4 @@
-import Compiler from "../Components/Compiler.jsx";
+import Compiler from "../components/Compiler.jsx";
 
 export default function CompilerPage() {
     return(

@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
-import { AuthContext } from "../Contexts/AuthContext";
-import { registerAuth } from "../Services/user";
+import { AuthContext } from "../contexts/AuthContext";
+import { registerAuth } from "../services/user";
 import { useNavigate } from "react-router-dom";
 
 export default function SingupForm() {
