@@ -7,7 +7,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import "./index.css";
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 import ProtectedRoutes from "./guards/ProtectedRoutes.jsx";
 import App from "./App.jsx";
@@ -20,23 +20,28 @@ import ProblemPage from "./pages/ProblemPage.jsx";
 import CompilerPage from "./pages/CompilerPage.jsx";
 import AddProblem from "./pages/AddProblem.jsx";
 import ViewProblemPage from "./pages/ViewProblemPage.jsx";
+import ScrollToTop from "./utils/scrollToTop.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route element={<ProtectedRoutes />}>
-        <Route path="login" element={<LoginPage />} />
-        <Route path="signup" element={<SignupPage />} />
-        <Route path="problem/:problemID" element={<SolveProblemPage />} />
-        {/* No footer on this page */}
-        <Route path="/" element={<App />}>
-          <Route index element={<HomePage />} />
-          <Route path="home" element={<HomePage />} />
-          <Route path="problems" element={<ProblemPage />} />
-          <Route path=":userID/addproblem" element={<AddProblem />} />
-          <Route path=":userID/:problemID/view" element={<ViewProblemPage />} />
-          <Route path=":userID" element={<ProfilePage />} />
-          <Route path="compiler" element={<CompilerPage />} />
+      <Route element={<ScrollToTop />}>
+        <Route element={<ProtectedRoutes />}>
+          <Route path="login" element={<LoginPage />} />
+          <Route path="signup" element={<SignupPage />} />
+          <Route path="problems/:problemID" element={<SolveProblemPage />} />
+          <Route path="/" element={<App />}>
+            <Route index element={<HomePage />} />
+            <Route path="home" element={<HomePage />} />
+            <Route path="problems" element={<ProblemPage />} />
+            <Route path=":userID/addproblem" element={<AddProblem />} />
+            <Route
+              path=":userID/:problemID/view"
+              element={<ViewProblemPage />}
+            />
+            <Route path=":userID" element={<ProfilePage />} />
+            <Route path="compiler" element={<CompilerPage />} />
+          </Route>
         </Route>
       </Route>
     </>
