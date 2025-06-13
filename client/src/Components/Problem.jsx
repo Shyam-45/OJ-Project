@@ -4,7 +4,7 @@ export default function Problem({ problem }) {
   const navigate = useNavigate();
 
   const handleSolveProblem = (id) => {
-    navigate(`/problem/${id}`);
+    navigate(`/problems/${id}`);
   };
 
   return (
