@@ -19,10 +19,12 @@ export const runCode = async (req, res) => {
       error: "",
     };
     let count = 0;
+    let testCases = [];
 
     //     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
     try {
       for (const item of sampleInputOutput) {
+        let flag = true;
         switch (language) {
           case "cpp":
             output = await executeCpp(filePath, item.sampleInputFile);
@@ -56,7 +58,20 @@ export const runCode = async (req, res) => {
           .replace(/\r\n/g, "\n")
           .trim();
 
+        const testCase = {
+          id: item.siofID,
+          input: item.sampleInputFile,
+          expectedOutput: expectedOutput,
+          actualOutput: userOutput,
+          status: "passed",
+        };
+
         if (!(userOutput === expectedOutput)) {
+          testCase.status = "failed";
+          flag = false;
+        }
+        testCases.push(testCase);
+        if (!flag) {
           break;
         }
         count++;
@@ -74,9 +89,10 @@ export const runCode = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      count,
-      total: `${sampleInputOutput.length}`,
-      message: output.message,
+      passed: count,
+      totalTests: `${sampleInputOutput.length}`,
+      // message: output.message,
+      testCases,
     });
   } catch (err) {
     console.error("Error while running code: ", err.message);
