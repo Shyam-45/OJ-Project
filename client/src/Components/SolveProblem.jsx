@@ -33,7 +33,7 @@ export default function SolveProblem() {
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [customInput, setCustomInput] = useState("");
   const [output, setOutput] = useState("");
-  const [outputError, setOutputError] = useState(false);
+  const [outputError, setOutputError] = useState();
   const [toggleTest, setToggleTest] = useState(false);
   const [testResult, setTestResult] = useState();
   const [showResults, setShowResults] = useState(false);
@@ -215,7 +215,7 @@ export default function SolveProblem() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+    <div className="flex flex-col min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
       <div className="container mx-auto p-4">
         {/* Main content */}
         <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-120px)]">
@@ -560,7 +560,7 @@ export default function SolveProblem() {
                   {outputError}
                 </pre>
               ) : (
-                <pre className="w-full h-32 p-3 rounded font-mono text-sm  overflow-auto bg-gray-50 text-gray-900 dark:bg-gray-700 dark:text-gray-100">
+                <pre className="w-full h-32 p-3 rounded font-mono text-sm  overflow-auto bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-gray-100">
                   {output || "Output for custom input will appear here..."}
                 </pre>
               )}
