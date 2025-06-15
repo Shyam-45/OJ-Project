@@ -62,7 +62,7 @@ export default function Navbar() {
         <div className="flex items-center">
           <i className="fas fa-code text-3xl text-blue-600 mr-2"></i>
           <span className="text-xl font-bold mr-8 text-gray-700 dark:text-gray-300 dark:hover:text-blue-400">
-            CodeMaster
+            codeMaster
           </span>
         </div>
         <button
