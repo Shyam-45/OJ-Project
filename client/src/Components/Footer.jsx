@@ -5,9 +5,10 @@ export default function Footer() {
         <span className="text-sm text-gray-600 dark:text-gray-400 mb-4 md:mb-0">
           © {new Date().getFullYear()}{" "}
           <a href="/" className="font-semibold hover:underline">
-            myOnlineJudge™
+            codeMaster™
           </a>
-          . All Rights Reserved.
+          {" "}
+          All Rights Reserved.
         </span>
         <ul className="flex space-x-4 text-sm text-gray-600 dark:text-gray-400">
           <li>
