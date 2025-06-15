@@ -52,6 +52,7 @@ export default function ProfilePage() {
   };
 
   return (
+    <div className="mt-12 lg:mt-16">
     <div className="main_div m-4 p-4">
       <div className="m-2 border-4 inline-block min-w-[300px] border-yellow-300">
         <div className="flex flex-row mb-2">
@@ -101,6 +102,7 @@ export default function ProfilePage() {
           )}
         </div>
       </div>
+    </div>
     </div>
   );
 }

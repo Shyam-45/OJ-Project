@@ -31,7 +31,7 @@ export default function ProblemPage() {
   }, []);
 
   return (
-    <>
+    <div className="mt-12 lg:mt-16">
       {error && (
         <p className="mt-2 text-sm text-red-600 font-semibold">❌ {error}</p>
       )}
@@ -58,6 +58,6 @@ export default function ProblemPage() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
