@@ -2,9 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-.code-editor .token.operator,
-.code-editor .token.punctuation {
-  background-color: transparent !important;
+.dark {
+  background-color: rgb(33, 33, 33);
 }
 
 /* :root {
