@@ -1,37 +1,26 @@
-import { useState } from "react";
-import Editor from "react-simple-code-editor";
-import Prism, { highlight } from "prismjs";
-import "prismjs/components/prism-c";
-import "prismjs/components/prism-clike";
-import "prismjs/components/prism-javascript";
-import "prismjs/components/prism-java";
-import "prismjs/components/prism-python";
-import "prismjs/themes/prism.css";
+import { useState, useContext } from "react";
+import Editor from "@monaco-editor/react";
+import { AuthContext } from "../contexts/AuthContext";
+import { getCustomOutput } from "../services/problem";
 import {
   cSample,
   pySample,
   javaSample,
   jsSample,
   cppSample,
-} from "../utils/sampleCode.js";
-import { getCustomOutput } from "../services/problem.js";
+} from "../utils/sampleCode";
 
 export default function Compiler() {
+  const { darkMode } = useContext(AuthContext);
   const [language, setLanguage] = useState("cpp");
   const [code, setCode] = useState(cppSample);
   const [customInput, setCustomInput] = useState("");
-  const [outputErr, setOutputErr] = useState("");
-  const [customOutput, setCustomOutput] = useState("");
-  const [aiReview, setAiReview] = useState(false);
+  const [showCustomInput, setShowCustomInput] = useState(true);
+  const [output, setOutput] = useState("");
+  const [outputError, setOutputError] = useState(false);
   const [disableCustomRun, setDisableCustomRun] = useState(false);
-
-  const languageMap = {
-    c: "c",
-    cpp: "clike",
-    js: "javascript",
-    java: "java",
-    py: "python",
-  };
+  const [aiReview, setAiReview] = useState();
+  const [disableAI, setDisableAI] = useState(true);
 
   const sampleCodeMap = {
     c: cSample,
@@ -41,143 +30,188 @@ export default function Compiler() {
     java: javaSample,
   };
 
-  const highlightCode = (code) =>
-    highlight(
-      code,
-      Prism.languages[languageMap[language]],
-      languageMap[language]
-    );
-
   const selectLanguage = (event) => {
     const selected = event.target.value;
     if (!selected) return;
     setLanguage(selected);
     setCode(sampleCodeMap[selected]);
-    setCustomOutput("");
-    setOutputErr("");
-    // setVerdict("");
-  };
-
-  const handleCustomInput = (event) => {
-    setCustomInput(event.target.value);
+    // setAiReview(false);
+    setOutput("");
+    setOutputError("");
   };
 
   const handleCustomRun = async () => {
     const inputValue = customInput || " ";
     const payload = { language, code, inputValue };
     setDisableCustomRun(true);
+    setDisableAI(true);
+    setOutput("");
+    setOutputError("");
     try {
-      // setCustomOutput("");
-      // setOutputErr("");
+      if (code.trim() === "") {
+        setOutputError("Please enter the code");
+        return;
+      }
       const response = await getCustomOutput(payload);
-      // console.log(response);
       if (!response.success) {
-        setOutputErr(response.error);
+        setOutputError(response.error);
         return;
       }
       if (response.message === "") {
-        setCustomOutput("Programme didn't print anything");
+        setOutput("Programme didn't print anything");
         return;
       }
-      setCustomOutput(response.message);
-      // setOutputMessage(message);
-      setOutputErr("");
-    } catch (error) {
-      console.log(
-        "Problem in receiving req from custom run {language, code, inputValue}"
-      );
-      setOutputErr("Something went wrong");
-      return;
+      setOutput(response.message);
+    } catch (err) {
+      setOutputError("Something went wrong");
     } finally {
       setDisableCustomRun(false);
-      setAiReview(false);
+      setDisableAI(false);
     }
   };
 
+  const handleCustomToggle = () => {
+    setShowCustomInput(!showCustomInput);
+    setOutput("");
+    setCustomInput("");
+  };
+
   return (
-    <>
-      <div className="flex flex-col lg:flex-row m-4">
-        <div className="div_left lg:w-1/2">
-          <div className="flex flex-col pt-4 pr-4 mb-2">
-            <div className="lang_opt mt-4 w-1/5 px-4">
-              <select
-                name="language"
-                value={language}
-                onChange={selectLanguage}
-                className="mb-4 p-2 border-2 border-gray-300 rounded dark:bg-gray-400"
-              >
-                <option value="c">C</option>
-                <option value="cpp">C++</option>
-                <option value="py">Python</option>
-                <option value="js">Javascript</option>
-                <option value="java">Java</option>
-              </select>
+    // <div className="min-h-90vh bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+    <div className="flex flex-col min-h-90vh bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+      <div className="container mx-auto p-4">
+        <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-120px)] min-h-0">
+          <div className="w-full lg:w-1/2 lg:overflow-auto rounded-lg shadow-lg bg-white dark:bg-gray-800 flex flex-col">
+            <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex flex-wrap gap-3 justify-between items-center">
+                <div className="relative px-4 py-1 whitespace-nowrap">
+                  <select
+                    name="language"
+                    value={language}
+                    onChange={selectLanguage}
+                    className="mb-4 px-2 h-8 text-base border-2 border-gray-300 rounded-full dark:bg-gray-400"
+                  >
+                    <option value="c">C</option>
+                    <option value="cpp">C++</option>
+                    <option value="py">Python</option>
+                    <option value="js">Javascript</option>
+                    <option value="java">Java</option>
+                  </select>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={handleCustomRun}
+                    className="px-4 py-2 rounded-full bg-green-600 text-white hover:bg-green-700 transition-colors cursor-pointer whitespace-nowrap disabled:bg-gray-300"
+                    disabled={disableCustomRun}
+                  >
+                    <i className="fas fa-play mr-2"></i> Run
+                  </button>
+                  <button
+                    className="px-4 py-2 rounded-full bg-purple-600 text-white hover:bg-purple-700 transition-colors cursor-pointer whitespace-nowrap disabled:bg-gray-300"
+                    disabled={disableAI}
+                  >
+                    <i className="fas fa-robot mr-2"></i> AI Review
+                  </button>
+                  <button
+                    onClick={handleCustomToggle}
+                    className={`px-4 py-2 rounded-full ${
+                      showCustomInput
+                        ? "bg-yellow-600 hover:bg-yellow-700"
+                        : "bg-gray-600 hover:bg-gray-700"
+                    } text-white transition-colors cursor-pointer whitespace-nowrap`}
+                  >
+                    <i
+                      className={`fas ${
+                        showCustomInput ? "fa-chevron-up" : "fa-chevron-down"
+                      } mr-2`}
+                    ></i>{" "}
+                    Custom Input
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="w-full h-[500px] overflow-auto px-4">
+            <div className="border-b border-gray-200 dark:border-gray-700">
               <Editor
+                height="519px"
+                className="flex-shrink-0"
+                language={language}
                 value={code}
-                onValueChange={(code) => setCode(code)}
-                highlight={highlightCode}
-                padding={10}
-                className="code-editor text-xl bg-gray-100 dark:bg-gray-800 dark:text-gray-300 w-full min-h-full border-red-500 border-4"
+                theme={darkMode ? "vs-dark" : "vs-light"}
+                onChange={(code) => setCode(code)}
+                options={{
+                  automaticLayout: true,
+                  minimap: { enabled: false },
+                  scrollBeyondLastLine: false,
+                  lineNumbers: "on",
+                  wordWrap: "on",
+                  fontSize: 20,
+                }}
               />
             </div>
           </div>
-          <div className="flex flex-row justify-between mx-4">
-            <button
-              type="button"
-              className="border-2 rounded-full my-2 py-2 px-8 text-xl  bg-blue-600 hover:bg-blue-800 text-white disabled:bg-gray-300"
-              disabled={disableCustomRun}
-              onClick={handleCustomRun}
-            >
-              Run
-            </button>
-            <button
-              type="button"
-              className="text-xl py-2 my-2 px-4 rounded-full border-2 bg-indigo-600 hover:bg-indigo-700 text-white mx-2 dark:text-gray-200 disabled:bg-gray-300"
-              disabled={!aiReview}
-              //   onClick={handleAIReview}
-            >
-              AI Review
-            </button>
-          </div>
-        </div>
-        <div className="div_right lg:w-1/2 flex flex-col ">
-          <div className="cus_inp m-4 border-4 bg-slate-100 dark:bg-slate-700 dark:border-slate-500">
-            <h3 className="text-base font-medium p-2 dark:text-gray-300">
-              Custom Input
-            </h3>
-            <textarea
-              rows={5}
-              placeholder="Type your input here..."
-              // name="customInput"
-              value={customInput}
-              onChange={handleCustomInput}
-              className="text-lg w-full resize-none rounded-lg px-4 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0"
-            />
-          </div>
-          <div className="cus_inp m-4 border-4 min-h-48 max-h-96 bg-slate-100 dark:bg-slate-700 dark:border-slate-500">
-            <h3 className="text-base font-medium p-2 dark:text-gray-300">
-              Output
-            </h3>
-            <pre className="px-4 my-4 text-lg break-words dark:text-gray-300 ">
-              {customOutput}
-            </pre>
-          </div>
-          <div className="mt-4 mr-4 bg-gray-100 dark:bg-gray-800">
-            {outputErr && (
-              <p className="my-2 p-2 text-base h-[100px] overflow-y-auto text-red-600 font-medium break-words whitespace-normal">
-                {outputErr}
-              </p>
-            )}
-          </div>
-          <div className="cus_inp m-4 border-4 min-h-36 max-h-96 bg-slate-100 dark:bg-slate-700 dark:border-slate-500">
-            <h3 className="text-base font-medium p-2 break-words  dark:text-gray-300">
-              Code review by AI will appear here
-            </h3>
+          <div className="w-full lg:w-1/2 lg:overflow-auto rounded-lg shadow-lg bg-white dark:bg-gray-800 flex flex-col">
+            <div className="px-4 border-b border-gray-200 dark:border-gray-700">
+              {showCustomInput && (
+                <div className="border-t border-gray-200 dark:border-gray-700 p-2">
+                  <div>
+                    <label className="block text-base font-medium mb-2">
+                      Custom Input
+                    </label>
+                    <textarea
+                      value={customInput}
+                      onChange={(e) => setCustomInput(e.target.value)}
+                      className="w-full h-32 p-3 rounded font-mono text-sm resize-none dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 bg-white text-gray-900 border-gray-300 border"
+                      placeholder="Enter your test input here..."
+                    ></textarea>
+                  </div>
+                </div>
+              )}
+              <div className="border-t dark:border-gray-700 border-gray-200 p-2">
+                <div className="flex justify-between items-center mb-2">
+                  {outputError ? (
+                    <h3 className="inline-flex items-center px-2.5 py-0.5 rounded text-sm font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                      Error
+                    </h3>
+                  ) : (
+                    <h3 className="block text-base font-medium">Output</h3>
+                  )}
+                </div>
+                <div className="flex justify-between items-center mb-2">
+                  {outputError ? (
+                    <pre className="w-full h-32 p-3 rounded font-mono text-sm  overflow-auto bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-gray-100">
+                      {outputError}
+                    </pre>
+                  ) : (
+                    <pre className="w-full h-32 p-3 rounded font-mono text-sm  overflow-auto bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-gray-100">
+                      {output || "Output will appear here"}
+                    </pre>
+                  )}
+                </div>
+              </div>
+              <div>
+                <div className="border-t dark:border-gray-700 border-gray-200 p-4">
+                  <div className="flex flex-col justify-between items-center mb-2">
+                    <h3 className="w-full text-base font-medium mb-2">
+                      Code Review by AI
+                    </h3>
+                    {/* </div> */}
+                    <div className="w-full h-32 p-3 rounded font-mono text-sm overflow-auto dark:bg-purple-900/20 dark:text-purple-100 border dark:border-purple-700 bg-purple-50 text-purple-900 border-purple-200">
+                      {aiReview ? (
+                        { aiReview }
+                      ) : (
+                        <div>
+                          <span>AI review will appear here (coming soon)</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
