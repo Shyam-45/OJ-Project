@@ -54,6 +54,9 @@ const problemSchema = new Schema({
     type: String,
     required: true,
   },
+  createdAt: {
+    type: Date,
+  },
 });
 
 problemSchema.index({ createdBy: 1 });
