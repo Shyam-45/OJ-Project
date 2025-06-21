@@ -139,12 +139,13 @@ export const userSingup = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
+    const joinDate = new Date().toISOString().split("T")[0];
     const user = await User.create({
       name,
       email,
       userID,
       password: hashedPassword,
+      joinDate,
     });
 
     const accessToken = jwt.sign({ id: user._id, userID }, SECRET_KEY_JWT, {
@@ -183,13 +184,16 @@ export const getUserProblemList = async (req, res) => {
       });
     }
 
-    const problems = await Problem.find({ createdBy: userId }).sort({ _id: -1 });
+    const problems = await Problem.find({ createdBy: userId }).sort({
+      _id: -1,
+    });
     return res
       .status(201)
-      .json(
-        { success: true, message: "Problem list found successfully",
-        problems}
-      );
+      .json({
+        success: true,
+        message: "Problem list found successfully",
+        problems,
+      });
   } catch (err) {
     console.log(err);
     res.status(500).json({ success: false, error: "Something went wrong" });
