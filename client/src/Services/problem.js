@@ -120,6 +120,8 @@ export const sendNewProblem = async (data) => {
 
 export const deleteProblem = async (p_id, u_id) => {
   try {
+    console.log(u_id);
+        console.log(p_id);
     const response = await axios.delete(
       `${backend_url}/problem/${p_id}/${u_id}`,
       { withCredentials: true }

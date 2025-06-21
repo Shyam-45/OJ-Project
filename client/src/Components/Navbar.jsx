@@ -4,12 +4,13 @@ import { AuthContext } from "../contexts/AuthContext";
 import { logoutUser } from "../services/user";
 
 export default function Navbar() {
-  const { setIsSigned, userId, setUserId, darkMode, setDarkMode } = useContext(AuthContext);
+  const { setIsSigned, userId, setUserId, darkMode, setDarkMode } =
+    useContext(AuthContext);
   const [logoutErr, setLogoutErr] = useState("");
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
-  useEffect(() => {
+  useEffect(() => { 
     const closeMenu = (e) => {
       if (showProfileMenu && !e.target.closest(".relative")) {
         setShowProfileMenu(false);
@@ -126,6 +127,7 @@ export default function Navbar() {
               >
                 <NavLink
                   to={`/${userId}`}
+                  onClick={() => setShowProfileMenu(false)}
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600"
                 >
                   <i className="fas fa-user-circle mr-2"></i>

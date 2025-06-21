@@ -1,19 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getUserInfo, getUserProblem } from "../services/user.js";
-import ProfileProblem from "../components/ProfileProblem.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getUserInfo, getUserProblem } from "../services/user";
+import { deleteProblem } from "../services/problem";
+import ProfileProblem from "../components/ProfileProblem";
 
 export default function ProfilePage() {
   const navigate = useNavigate();
+  const [delError, setDelErr] = useState("");
   const { userID } = useParams();
+  console.log(userID);
   const [userInfo, setUserInfo] = useState({
     name: "",
     userID: "",
     email: "",
   });
   const [problemList, setProblemList] = useState([]);
-  console.log(userID);
-
   useEffect(() => {
     async function userInfoFunc() {
       const res = await getUserInfo(userID);
@@ -28,7 +30,6 @@ export default function ProfilePage() {
       }
       return;
     }
-
     async function userProblem() {
       const response = await getUserProblem(userID);
       if (response.success) {
@@ -39,6 +40,23 @@ export default function ProfilePage() {
     userInfoFunc();
     userProblem();
   }, [userID]);
+
+  const handleDeleteProblem = async (p_id) => {
+    try {
+      // console.log(`delete problem button with id: ${p_id} clicked`);
+      const response = await deleteProblem(p_id, userID);
+      if (!response.success) {
+        setDelErr(response.error);
+        return;
+      }
+      setDelErr("");
+      onDelete();
+    } catch (err) {
+      console.log(err);
+      setDelErr("Something went wrong");
+    }
+    return;
+  };
 
   const removeProblemFromList = (deletedProblemID) => {
     setProblemList((prevList) =>
@@ -52,57 +70,80 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="mt-12 lg:mt-16">
-    <div className="main_div m-4 p-4">
-      <div className="m-2 border-4 inline-block min-w-[300px] border-yellow-300">
-        <div className="flex flex-row mb-2">
-          <h3 className="font-normal text-xl px-2">Name: </h3>
-          <h3 className="font-medium text-xl">{userInfo.name}</h3>
+    <div className="mt-12 lg:mt-16 dark:bg-gray-950">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white px-4 sm:px-8 py-8">
+        {/* Profile Section */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-10">
+          <div className="flex gap-6 items-center">
+            <div>
+              <h2 className="text-2xl font-bold">{userInfo.name}</h2>
+              <p className="text-gray-600 dark:text-gray-400">
+                @{userInfo.name}
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 text-sm">
+                <div>
+                  <p className="text-gray-500 dark:text-gray-400">User ID</p>
+                  <p>{userInfo.userID}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 dark:text-gray-400">Email</p>
+                  <p className="text-nowrap pr-8">{userInfo.email}</p>
+                </div>
+                {/* <div>
+                  <p className="text-gray-500 dark:text-gray-400">
+                    Member Since
+                  </p>
+                  <p>
+                    {new Date(userInfo.createdAt).toLocaleDateString("en-CA")}
+                  </p>
+                </div> */}
+                <div>
+                  <p className="text-gray-500 dark:text-gray-400">Problems</p>
+                  <p>{problemList.length}</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-row mb-2">
-          <h3 className="font-normal text-xl px-2">Email: </h3>
-          <h3 className="font-medium text-xl">{userInfo.email}</h3>
-        </div>
-        <div className="flex flex-row mb-2">
-          <h3 className="font-normal text-xl px-2">User id: </h3>
-          <h3 className="font-medium text-xl">{userInfo.userID}</h3>
-        </div>
-      </div>
-      <div className="flex flex-col lg:flex-row justify-between items-center w-[300px] lg:w-[350px] my-4 mx-2 border-4 border-indigo-500">
-        <h3 className="font-semibold text-xl p-2">Add a new problem</h3>
-        <button
-          type="button"
-          className="border-2 text-lg px-2 my-2 bg-indigo-600 hover:bg-indigo-700 text-white mx-2 dark:text-gray-200"
-          onClick={newProblemButton}
-        >
-          Click here
-        </button>
-      </div>
 
-      <div className="min-h-screen bg-gray-50 py-8 px-4 dark:bg-gray-600 border-4">
-        <h3 className="font-semibold text-xl p-2">Previously added problems</h3>
-        <div className="max-w-7xl mx-auto">
-          {problemList.length ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
-              {problemList.map((item) => (
-                <ProfileProblem
-                  key={item.problemID}
-                  problem={item}
-                  u_id={userID}
-                  onDelete={() => removeProblemFromList(item.problemID)}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-20">
-              <span className="text-white text-lg font-medium">
-                You are yet to add your 1st problem.
-              </span>
-            </div>
-          )}
+        {/* Problems Header */}
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-6 py-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
+          <div>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+              My Problems
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Manage your created problems
+            </p>
+          </div>
+          <button
+            className="bg-blue-600 text-white px-5 py-2.5 rounded-md hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 transition"
+            onClick={newProblemButton}
+          >
+            Add Problem
+          </button>
         </div>
+
+        {/* Problems Grid */}
+        {problemList.length === 0 ? (
+          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl shadow-md">
+            <p className="text-gray-600 dark:text-gray-300 mb-2">
+              No problems added yet.
+            </p>
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {problemList.map((problem) => (
+              <ProfileProblem
+                key={problem.problemID}
+                problem={problem}
+                u_id={userID}
+                onDelete={() => removeProblemFromList(problem.problemID)}
+              />
+            ))}
+          </div>
+        )}
       </div>
-    </div>
     </div>
   );
 }

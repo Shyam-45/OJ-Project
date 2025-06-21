@@ -1,5 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  faEye,
+  faEdit,
+  faTrash,
+  faCalendar,
+  faTimes,
+  faSave,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { deleteProblem } from "../services/problem";
 
 export default function ProfileProblem({ problem, u_id, onDelete }) {
@@ -8,7 +17,6 @@ export default function ProfileProblem({ problem, u_id, onDelete }) {
 
   const handleDeleteProblem = async (p_id) => {
     try {
-      // console.log(`delete problem button with id: ${p_id} clicked`);
       const response = await deleteProblem(p_id, u_id);
       if (!response.success) {
         setDelErr(response.error);
@@ -25,38 +33,39 @@ export default function ProfileProblem({ problem, u_id, onDelete }) {
 
   const handleViewProblem = async () => {
     console.log("/u_id/p_id/view");
-    navigate(`/${u_id}/${problem.problemID}/view`)
+    navigate(`/${u_id}/${problem.problemID}/view`);
   };
 
   return (
-    // grid grid-cols-4 gap-4
-    <div className="flex flex-col lg:flex-row justify-start items-center shadow-md py-4 my-2 hover:shadow-lg dark:bg-gray-800 rounded-xl">
-      <div className="w-3/5 pl-3 font-normal lg:text-xl text-lg dark:text-gray-300">
-        {problem.title}
-      </div>
-      <div></div>
-      {/* <div className="w-1/5 text-lg font-light mx-2 dark:text-white">
+    <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-lg flex flex-col gap-3 border border-gray-200 dark:border-gray-700 transition hover:shadow-xl">
+      <div className="flex justify-between items-start">
+        <h4 className="font-semibold text-lg">{problem.title}</h4>
         {problem.tags}
-      </div> */}
-      <button
-        className="text-base lg:text-lg p-2 mt-2 rounded-md bg-green-600 hover:bg-green-700 text-white mx-2 dark:text-gray-200"
-        onClick={() => handleViewProblem(problem.problemID)}
-      >
-        View
-      </button>
-      <button
-        className="text-base lg:text-lg p-2 mt-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white mx-2 dark:text-gray-200 disabled:bg-gray-300"
-        disabled
-        // onClick={() => handleSolveProblem(problem.problemID)}
-      >
-        Modify
-      </button>
-      <button
-        className="text-base lg:text-lg p-2 mt-2 rounded-md bg-red-500 hover:bg-red-600 text-white mx-2 dark:text-gray-200"
-        onClick={() => handleDeleteProblem(problem.problemID)}
-      >
-        Delete
-      </button>
+      </div>
+      <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+        <FontAwesomeIcon icon={faCalendar} className="h-3 w-3" />
+        Created on {new Date(problem.createdAt).toLocaleDateString("en-CA")}
+      </div>
+      <div className="flex gap-2 mt-auto">
+        <button
+          className="flex-1 text-sm border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+          onClick={handleViewProblem}
+        >
+          <FontAwesomeIcon icon={faEye} className="mr-1" /> View
+        </button>
+        <button
+          className="flex-1 text-sm border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 disabled:bg-gray-300 dark:disabled:bg-gray-500"
+          disabled
+        >
+          <FontAwesomeIcon icon={faEdit} className="mr-1" /> Edit
+        </button>
+        <button
+          className="text-red-600 border border-red-300 dark:border-red-600 px-3 py-1.5 rounded-md hover:bg-red-100 dark:hover:bg-red-900/40"
+          onClick={() => handleDeleteProblem(problem.problemID)}
+        >
+          <FontAwesomeIcon icon={faTrash} />
+        </button>
+      </div>
     </div>
   );
 }

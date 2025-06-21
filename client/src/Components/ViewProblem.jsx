@@ -1,7 +1,19 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getProblemAndTestcases } from "../services/problem";
-import InputOutput from "./InputOutput";
+
+function Section({ title, content }) {
+  return (
+    <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+        {title}
+      </h3>
+      <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+        {content}
+      </p>
+    </div>
+  );
+}
 
 export default function ViewProblem() {
   const { problemID } = useParams();
@@ -13,120 +25,89 @@ export default function ViewProblem() {
     outputInfo: "",
     sampleInputOutput: [],
   });
-  const [testcase, setTestcase] = useState({
-    inputOutputFile: [],
-    sampleInputOutputFile: [],
-  });
 
   const [infoError, setInfoError] = useState("");
 
   useEffect(() => {
     async function fetchProblem() {
       try {
-        console.log("i tried");
         const response = await getProblemAndTestcases(problemID);
         if (!response.success) {
           setInfoError(response.error);
-          setProblem("");
-          setTestcase("");
           return;
         }
         setProblem(response.payload.problemInfo);
-        setTestcase(response.payload.testcaseInfo);
         setInfoError("");
       } catch (err) {
-        // console.log("Error while getting problem info from api");
-        setInfoError("An error occurred");
-        setProblem("");
-        setTestcase("");
+        setInfoError("An error occurred while fetching problem data.");
       }
     }
     fetchProblem();
   }, [problemID]);
 
+  if (infoError) {
+    return (
+      <div className="text-center text-red-600 font-semibold py-6">
+        {infoError}
+      </div>
+    );
+  }
+
   return (
-    <div>
-      {infoError ? (
-        <div>{infoError}</div>
-      ) : (
-        <div className="m-4 border-4 px-4">
-          <div className="flex flex-col w-fit break-words whitespace-normal px-4 mt-4 border-2 bg-gray-100 dark:bg-gray-800">
-            <h3 className="font-medium text-lg pt-4 dark:text-gray-300">
-              Title
-            </h3>
-            <p className="text-xl py-2 dark:text-white">{problem.title}</p>
-          </div>
-          <div className="flex flex-row w-fit break-words whitespace-normal px-4 mt-4 border-2 bg-gray-100 dark:bg-gray-800">
-            <span className="font-medium text-lg py-2 dark:text-gray-300">
-              Tag:
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-10 px-4 md:px-8">
+      <div className="max-w-4xl mx-auto space-y-8">
+        {/* Title and Tags */}
+        <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {problem.title || "Untitled Problem"}
+            </h1>
+            <span className="mt-2 sm:mt-0 inline-block text-sm font-medium px-3 py-1 bg-indigo-100 dark:bg-indigo-700 text-indigo-800 dark:text-white rounded-full">
+              {problem.tags}
             </span>
-            &nbsp;
-            <span className="text-xl py-2 dark:text-white">{problem.tags}</span>
           </div>
-          <div className="flex flex-col w-fit break-words whitespace-normal px-4 mt-4 border-2 bg-gray-100 dark:bg-gray-800">
-            <h3 className="font-medium text-lg pt-4 dark:text-gray-300">
-              Description
-            </h3>
-            <p className="text-xl py-2 dark:text-white">
-              {problem.description}
-            </p>
-          </div>
-          <div className="flex flex-col w-fit break-words whitespace-normal px-4 mt-4 border-2 bg-gray-100 dark:bg-gray-800">
-            <h3 className="font-medium text-lg pt-4 dark:text-gray-300">
-              Input Format
-            </h3>
-            <p className="text-xl py-2 dark:text-white">{problem.inputInfo}</p>
-          </div>
-          <div className="flex flex-col w-fit break-words whitespace-normal px-4 mt-4 border-2 bg-gray-100 dark:bg-gray-800">
-            <h3 className="font-medium text-lg pt-4 dark:text-gray-300">
-              Output Format
-            </h3>
-            <p className="text-xl py-2 dark:text-white">{problem.outputInfo}</p>
-          </div>
-          <div className="w-fit h-fit break-words px-4 mt-4 border-2 bg-gray-100 dark:bg-gray-800">
-            <h3 className="font-medium text-lg pt-4 dark:text-gray-300">
-              Sample Input Output
-            </h3>
-          
-          <div className="max-w-7xl">
-            {problem.sampleInputOutput.length ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {problem.sampleInputOutput.map((item) => (
-                  <InputOutput
-                    key={item.sioID}
-                    inp={item.input}
-                    out={item.output}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-20">
-                <span className="text-lg font-medium">
-                  No test case provided to display
-                </span>
-              </div>
-            )}
-            </div>
-          </div>
-          <div>
-            
-          </div>
-          <div>
-            Test cases to check on sample cases
-            </div>
-          {/* <div className="flex lg:flex">
-              <h4 className="font-medium text-lg dark:text-gray-300">Input</h4>
-              <h4 className="font-medium text-lg dark:text-gray-300">Output</h4>
-              </div>
-          </div> */}
-          {/* <div>
-            <h3>Sample input info</h3>
-            <p>{problem.title}</p>
-          </div> */}
-          {/* <div>Test case for sample input</div>
-          <div>TEST CASE for verdict</div> */}
         </div>
-      )}
+
+        <Section title="Description" content={problem.description} />
+        <Section title="Input Format" content={problem.inputInfo} />
+        <Section title="Output Format" content={problem.outputInfo} />
+
+        {/* Sample Input Output */}
+        <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            Sample Input Output
+          </h3>
+          {problem.sampleInputOutput.length ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {problem.sampleInputOutput.map((item) => (
+                <div
+                  key={item.sioID}
+                  className="flex flex-col lg:flex-row justify-between bg-gray-50 dark:bg-gray-700 p-4 rounded-xl border border-gray-200 dark:border-gray-600 shadow hover:shadow-lg"
+                >
+                  <div className="w-full lg:w-1/2 pr-2">
+                    <h4 className="font-medium text-md text-gray-800 dark:text-gray-300 mb-1">
+                      Input
+                    </h4>
+                    <pre className="bg-white dark:bg-gray-800 p-2 rounded text-sm text-gray-900 dark:text-white overflow-auto">
+                      {item.input}
+                    </pre>
+                  </div>
+                  <div className="mt-4 lg:mt-0 lg:w-1/2 pl-2">
+                    <h4 className="font-medium text-md text-gray-800 dark:text-gray-300 mb-1">
+                      Output
+                    </h4>
+                    <pre className="bg-white dark:bg-gray-800 p-2 rounded text-sm text-gray-900 dark:text-white overflow-auto">
+                      {item.output}
+                    </pre>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-600 dark:text-gray-400">No sample cases provided.</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
