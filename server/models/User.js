@@ -25,6 +25,9 @@ const userSchema = new Schema({
     type: String,
     required: true,
     minLength: 8
+  },
+  joinDate: {
+    type: Date,
   }
 });
 
