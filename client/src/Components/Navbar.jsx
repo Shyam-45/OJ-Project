@@ -10,7 +10,7 @@ export default function Navbar() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
-  useEffect(() => { 
+  useEffect(() => {
     const closeMenu = (e) => {
       if (showProfileMenu && !e.target.closest(".relative")) {
         setShowProfileMenu(false);
@@ -57,6 +57,11 @@ export default function Navbar() {
     }
   };
 
+  const handleNavClick = () => {
+    setShowMobileMenu(false);
+    setShowProfileMenu(false);
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-10 px-6 py-4 flex items-center justify-between shadow-md bg-white dark:bg-gray-800">
       <div className="flex items-center justify-between w-full md:w-auto">
@@ -94,18 +99,21 @@ export default function Navbar() {
         <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 p-4 md:py-0">
           <NavLink
             to="/"
+            onClick={handleNavClick}
             className="text-base font-medium hover:text-blue-600 transition-colors text-gray-700 dark:text-gray-300  dark:hover:text-blue-300"
           >
             Home
           </NavLink>
           <NavLink
             to="/problems"
+            onClick={handleNavClick}
             className="text-base font-medium hover:text-blue-600 transition-colors text-gray-700 dark:text-gray-300  dark:hover:text-blue-300"
           >
             Problems
           </NavLink>
           <NavLink
             to="/compiler"
+            onClick={handleNavClick}
             className="text-base font-medium hover:text-blue-600 transition-colors text-gray-700 dark:text-gray-300  dark:hover:text-blue-300"
           >
             Compiler
