@@ -11,8 +11,6 @@ export const identifyUser = async (req, res) => {
   try {
     const { userid } = req.params;
     const { userId } = req; // Stored in jwt token
-    // console.log(userid);
-    // console.log(userId);
 
     // Authorization
     if (userid !== userId) {
@@ -35,7 +33,6 @@ export const identifyUser = async (req, res) => {
       email: userInfo.email,
     });
   } catch (err) {
-    console.log(err);
     res.status(500).json({ success: false, error: "Something went wrong" });
   }
 };
@@ -48,8 +45,6 @@ export const userLogin = async (req, res) => {
         .status(400)
         .json({ success: false, error: "User already logged in" });
     }
-    // If a request is made from postman even if user is already logged in
-    // Not sure if needed
 
     const { userID, password } = req.body;
 
@@ -86,14 +81,14 @@ export const userLogin = async (req, res) => {
       maxAge: 1 * 24 * 60 * 60 * 1000,
     });
 
-    console.log("User logged in");
+    // console.log("User logged in");
     return res.status(200).json({
       success: true,
       message: "User logged in successfully",
       userId: userID,
     });
   } catch (err) {
-    console.error("Login error:", err.message);
+    // console.error("Login error:", err.message);
     return res.status(500).json({
       success: false,
       error: "Internal Server Error. Please try again later.",
@@ -109,7 +104,6 @@ export const userSingup = async (req, res) => {
         .status(400)
         .json({ success: false, error: "User already logged in" });
     }
-    // Not sure if needed
 
     const { name, email, userID, password } = req.body;
 
@@ -131,7 +125,7 @@ export const userSingup = async (req, res) => {
 
     const existingUserID = await User.findOne({ userID });
     if (existingUserID) {
-      console.log("User ID already in use");
+      // console.log("User ID already in use");
       return res.status(409).json({
         success: false,
         error: "User ID already in use",
@@ -156,14 +150,14 @@ export const userSingup = async (req, res) => {
       maxAge: 1 * 24 * 60 * 60 * 1000,
     });
 
-    console.log("Account successfully registered");
+    // console.log("Account successfully registered");
     return res.status(201).json({
       success: true,
       message: "User saved to DB",
       userId: userID,
     });
   } catch (err) {
-    console.error("Error while saving user to DB:", err.message);
+    // console.error("Error while saving user to DB:", err.message);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error.",
@@ -192,7 +186,7 @@ export const getUserProblemList = async (req, res) => {
       problems,
     });
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     res.status(500).json({ success: false, error: "Something went wrong" });
   }
 };

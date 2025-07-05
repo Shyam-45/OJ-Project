@@ -103,8 +103,7 @@ export const createProblem = async (req, res) => {
       message: "we have received all requested fields",
     });
   } catch (err) {
-    console.log("error while asving:")
-    console.error(err);
+    // console.error(err);
     res.json({ success: "failed", err });
   } finally {
     filePaths.forEach((filePath) => {

@@ -29,7 +29,6 @@ export function parseTestCases(inputPath, outputPath) {
       iofID:             uuidv4(),
       inputFile:    inputBlock,
       outputFile:   outputBlock,
-      // size:               blockLen,
     });
 
     inIdx  += 1 + blockLen;

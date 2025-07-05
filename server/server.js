@@ -13,7 +13,7 @@ const port = process.env.PORT;
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // frontend URL
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
@@ -26,16 +26,8 @@ DBConnection();
 
 app.use("/", routes);
 
-// app.use("/user", user);
-
-// app.use("/problem", problem);
-
-// app.get("/authlogin", authentincateUser, (req, res) => {
-//   res.status(200).json({ success: true, message: "User Authentication successful", userid: req.userId});
-// });
-
 app.use(errorHandler);
 
 app.listen(port, () => {
-  console.log(`Server listening on port ${port}!`);
+  // console.log(`Server listening on port ${port}!`);
 });

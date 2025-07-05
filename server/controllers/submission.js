@@ -29,10 +29,6 @@ export const customOutput = async (req, res) => {
     const response_data = response.data;
     return res.status(200).json(response_data);
   } catch (err) {
-    console.error(
-      "Error while sending request to custom input url: ",
-      err.message
-    );
     res.status(500).json({ success: false, error: "Something went wrong" });
   }
 };
@@ -60,13 +56,11 @@ export const codeOutput = async (req, res) => {
     const response_data = response.data;
     return res.status(200).json(response_data);
   } catch (err) {
-    console.error("Error while sending request to compiler url: ", err.message);
     res.status(500).json({ success: false, error: "something went wrong" });
   }
 };
 
 export const codeVerdict = async (req, res) => {
-  // console.log("req for code submission");
   const { problemID } = req.params;
   const { language = "cpp", code } = req.body;
 
@@ -92,13 +86,8 @@ export const codeVerdict = async (req, res) => {
       }
     );
     const response_data = response.data;
-    console.log(response_data);
     return res.status(200).json(response_data);
   } catch (err) {
-    console.error(
-      "Error while sending request to compiler url for submit: ",
-      err.message
-    );
     res.status(500).json({ success: false, error: "something went wrong" });
   }
 };

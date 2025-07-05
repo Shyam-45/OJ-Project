@@ -8,16 +8,19 @@ import {
   showProblem,
   createProblem,
   deleteProblemAndTestcases,
-  getProblemAndTestcases
+  getProblemAndTestcases,
 } from "../controllers/problem.js";
-import { customOutput, codeOutput, codeVerdict } from "../controllers/submission.js";
+import {
+  customOutput,
+  codeOutput,
+  codeVerdict,
+} from "../controllers/submission.js";
 import { authentincateUser } from "../middlewares/authenticate.js";
 
 const router = express.Router();
 
 router.use(authentincateUser);
 
-// Show all problems
 router.get("", showProblemList);
 
 const __filename = fileURLToPath(import.meta.url);
@@ -28,7 +31,6 @@ if (!fs.existsSync(uploadDir)) {
 }
 const upload = multer({ dest: uploadDir });
 
-// Create Problem route
 router.post(
   "/new",
   upload.fields([
@@ -40,23 +42,16 @@ router.post(
   createProblem
 );
 
-// Custom output route
 router.post("/customrun", customOutput);
 
-// Run problem route
 router.post("/:problemID/run", codeOutput);
 
-// Submit problem route
 router.post("/:problemID/submit", codeVerdict);
 
-// View problem route for problem setter
 router.get("/:problemID/view", getProblemAndTestcases);
 
-// Delete problem route
 router.delete("/:problemID/:userid", deleteProblemAndTestcases);
 
-// Read problem route
 router.get("/:problemID", showProblem);
-
 
 export default router;
