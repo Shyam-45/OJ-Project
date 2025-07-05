@@ -7,8 +7,6 @@ import { executeJava } from "../utils/executeJava.js";
 import { executeC } from "../utils/executeC.js";
 
 export const runCode = async (req, res) => {
-  console.log("runCode endpoint hit");
-
   const { language, code, sampleInputOutput } = req.body;
 
   try {
@@ -21,7 +19,6 @@ export const runCode = async (req, res) => {
     let count = 0;
     let testCases = [];
 
-    //     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
     try {
       for (const item of sampleInputOutput) {
         let flag = true;
@@ -77,7 +74,7 @@ export const runCode = async (req, res) => {
         count++;
       }
     } catch (err) {
-      console.error(err);
+      // console.error(err);
       output = { success: false, error: "something went wrong" };
     } finally {
       await Promise.all([fs.unlink(filePath).catch(() => {})]);
@@ -91,11 +88,10 @@ export const runCode = async (req, res) => {
       success: true,
       passed: count,
       totalTests: `${sampleInputOutput.length}`,
-      // message: output.message,
       testCases,
     });
   } catch (err) {
-    console.error("Error while running code: ", err.message);
+    // console.error("Error while running code: ", err.message);
     res.status(500).json({ success: false, error: "something went wrong" });
   }
 };

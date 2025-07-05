@@ -17,7 +17,7 @@ export const generateFile = (language, code) => {
   const uniqueId = uuidv4();
   const fileName = `${uniqueId}.${language}`;
   const filePath = path.join(dirCode, fileName);
-  console.log(`Printing code file path: ${filePath}`);
+  // console.log(`Printing code file path: ${filePath}`);
   fs.writeFileSync(filePath, code);
   return filePath;
 };

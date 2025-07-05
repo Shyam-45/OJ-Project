@@ -49,7 +49,6 @@ function spawnWithCapture(command, args, inputBuffer = null) {
 }
 
 export const executeCpp = async (filePath, sampleInputContent) => {
-  // console.log("cpp fille");
   const jobId = path.basename(filePath).split(".")[0];
   const exeFileName = `${jobId}.exe`;
   const exeFile = path.join(dirOutput, exeFileName);
@@ -99,8 +98,7 @@ export const executeCpp = async (filePath, sampleInputContent) => {
     }
     return { success: true, message: stdout };
   } catch (err) {
-    console.error("Error while running executeCpp");
-    console.log(err.message);
+    // console.log(err.message);
     return { success: false, error: "something went wrong" };
   } finally {
     await Promise.all([

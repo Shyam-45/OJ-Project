@@ -54,7 +54,6 @@ function spawnWithCapture(command, args, inputBuffer = null) {
 }
 
 export const executeC = async (filePath, sampleInputContent) => {
-  console.log("C fille");
   const jobId = path.basename(filePath).split(".")[0];
   const exeFileName = `${jobId}.exe`;
   const exeFile = path.join(dirOutput, exeFileName);
@@ -62,7 +61,6 @@ export const executeC = async (filePath, sampleInputContent) => {
 
   try {
     const stats = await fs.stat(filePath);
-    console.log(stats.size);
     if (stats.size > max_source_code_size) {
       return {
         success: false,
@@ -82,9 +80,7 @@ export const executeC = async (filePath, sampleInputContent) => {
     if (compileCode !== 0) {
       return { success: false, error: compileErr };
     }
-    console.log("code compiled successfully");
     const inputBuffer = await fs.readFile(inputFilePath);
-    console.log(inputBuffer);
 
     const { procRef: runProc, promise: runPromise } = spawnWithCapture(
       exeFile,
@@ -107,8 +103,6 @@ export const executeC = async (filePath, sampleInputContent) => {
     if (code !== 0) {
       return { success: false, error: stderr || `Exited with code ${code}` };
     }
-    console.log(98);
-    console.log(stdout);
     return { success: true, message: stdout };
   } catch (err) {
     return { success: false, error: err.message };

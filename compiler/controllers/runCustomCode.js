@@ -7,7 +7,6 @@ import { executeJava } from "../utils/executeJava.js";
 import { executeC } from "../utils/executeC.js";
 
 export const runCustomCode = async (req, res) => {
-  console.log("hit custom run endpoint");
   const { language, code, inputValue } = req.body;
 
   try {
@@ -18,7 +17,6 @@ export const runCustomCode = async (req, res) => {
       error: "",
     };
 
-    // for (const item of sampleInputOutput) {
     try {
       switch (language) {
         case "cpp":
@@ -62,7 +60,7 @@ export const runCustomCode = async (req, res) => {
       message: output.message,
     });
   } catch (err) {
-    console.error("Error while running code: ", err.message);
+    // console.error("Error while running code: ", err.message);
     res.status(500).json({ success: false, filePath, error: err.message });
   }
 };
