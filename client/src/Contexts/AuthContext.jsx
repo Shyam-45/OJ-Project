@@ -26,19 +26,6 @@ export const AuthProvider = ({ children }) => {
     loggedStatus();
   }, []);
 
-  // useEffect(() => {
-  //   async function loggedStatus() {
-  //     const status = (await checkLogin()).loggedIn;
-  //     if (!status) {
-  //       navigate("/login");
-  //       return;
-  //     }
-  //     setIsSigned(status);
-  //     navigate("/home");
-  //   }
-  //   loggedStatus();
-  // }, [isSigned]);
-
   return (
     <AuthContext.Provider
       value={{

@@ -19,7 +19,7 @@ export default function Compiler() {
   const [output, setOutput] = useState("");
   const [outputError, setOutputError] = useState(false);
   const [disableCustomRun, setDisableCustomRun] = useState(false);
-  const [aiReview, setAiReview] = useState();
+  const [aiReview, setAiReview] = useState(false);
   const [disableAI, setDisableAI] = useState(true);
 
   const sampleCodeMap = {
@@ -35,7 +35,6 @@ export default function Compiler() {
     if (!selected) return;
     setLanguage(selected);
     setCode(sampleCodeMap[selected]);
-    // setAiReview(false);
     setOutput("");
     setOutputError("");
   };
@@ -66,7 +65,8 @@ export default function Compiler() {
       setOutputError("Something went wrong");
     } finally {
       setDisableCustomRun(false);
-      setDisableAI(false);
+      setDisableAI(true);
+      setAiReview(false);
     }
   };
 
@@ -77,7 +77,6 @@ export default function Compiler() {
   };
 
   return (
-    // <div className="min-h-90vh bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
     <div className="flex flex-col min-h-90vh bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
       <div className="container mx-auto p-4">
         <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-120px)] min-h-0">
@@ -195,7 +194,6 @@ export default function Compiler() {
                     <h3 className="w-full text-base font-medium mb-2">
                       Code Review by AI
                     </h3>
-                    {/* </div> */}
                     <div className="w-full h-32 p-3 rounded font-mono text-sm overflow-auto dark:bg-purple-900/20 dark:text-purple-100 border dark:border-purple-700 bg-purple-50 text-purple-900 border-purple-200">
                       {aiReview ? (
                         { aiReview }

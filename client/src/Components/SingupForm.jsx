@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 export default function SingupForm() {
   const navigate = useNavigate();
-  console.log("Register page component");
   const { setIsSigned, setUserId } = useContext(AuthContext);
 
   const [inputValue, setInputValue] = useState({
@@ -65,7 +64,6 @@ export default function SingupForm() {
       setUserId("");
       setError(response.error);
     } catch (err) {
-      console.log(err);
       setError("Registration attempt failed");
     } finally {
       setInputValue({

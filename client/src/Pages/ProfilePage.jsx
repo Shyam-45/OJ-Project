@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getUserInfo, getUserProblem } from "../services/user";
 import { deleteProblem } from "../services/problem";
 import ProfileProblem from "../components/ProfileProblem";
@@ -44,7 +43,6 @@ export default function ProfilePage() {
 
   const handleDeleteProblem = async (p_id) => {
     try {
-      // console.log(`delete problem button with id: ${p_id} clicked`);
       const response = await deleteProblem(p_id, userID);
       if (!response.success) {
         setDelErr(response.error);
@@ -53,7 +51,6 @@ export default function ProfilePage() {
       setDelErr("");
       onDelete();
     } catch (err) {
-      console.log(err);
       setDelErr("Something went wrong");
     }
     return;
@@ -73,7 +70,6 @@ export default function ProfilePage() {
   return (
     <div className="mt-12 lg:mt-16 dark:bg-gray-950">
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white px-4 sm:px-8 py-8">
-        {/* Profile Section */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-10">
           <div className="flex gap-6 items-center">
             <div>
@@ -107,7 +103,6 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Problems Header */}
         {isAdmin && (
           <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-6 py-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
             <div>
@@ -127,7 +122,6 @@ export default function ProfilePage() {
           </div>
         )}
 
-        {/* Problems Grid */}
         {isAdmin && (
           <div>
             {problemList.length === 0 ? (

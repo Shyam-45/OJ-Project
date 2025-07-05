@@ -4,7 +4,6 @@ import { AuthContext } from "../contexts/AuthContext";
 import { loginAuth } from "../services/user";
 
 export default function LoginForm() {
-  console.log("Login Pge component");
   const navigate = useNavigate();
   const { setIsSigned, setUserId } = useContext(AuthContext);
 
@@ -55,7 +54,6 @@ export default function LoginForm() {
       setUserId("");
       setError(response.error);
     } catch (err) {
-      console.log(`${err.message}`);
       setError("Login attempt failed");
     } finally {
       setInputValue({

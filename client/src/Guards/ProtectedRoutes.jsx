@@ -18,7 +18,10 @@ export default function ProtectedRoutes() {
     return <Navigate to="/login" replace />;
   }
 
-  if (isSigned && (pathname === "/login" || pathname === "/signup" || pathname === "/home")) {
+  if (
+    isSigned &&
+    (pathname === "/login" || pathname === "/signup" || pathname === "/home")
+  ) {
     return <Navigate to="/" replace />;
   }
 

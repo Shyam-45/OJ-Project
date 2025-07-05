@@ -43,7 +43,8 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="cursor-not-allowed transition-all duration-300 opacity-50">
+          {/* Feature not avaialbe now */}
+          {/* <div className="cursor-not-allowed transition-all duration-300 opacity-50">
             <div
               className={`rounded-xl shadow-lg p-8 transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700`}
               onClick={() => navigate("#")}
@@ -73,7 +74,7 @@ export default function Home() {
                 </span>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div
             className={`rounded-xl shadow-lg p-8 cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700`}
@@ -105,32 +106,31 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="cursor-not-allowed transition-all duration-300 opacity-50">
-            <div
-              className={`rounded-xl shadow-lg p-8 transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700`}
-            >
-              <div className="flex items-start justify-between mb-6">
-                <div
-                  className={`w-16 h-16 rounded-full flex items-center justify-center bg-red-100 dark:bg-red-900`}
-                >
-                  <i className="fas fa-bookmark text-2xl text-yellow-500 dark:text-yellow-400" />
-                </div>
-                <span className="text-sm font-medium px-3 py-1 rounded-full bg-purple-100 text-purple-800">
-                  Saved Challenges
-                </span>
+          <div
+            className={`rounded-xl shadow-lg p-8 cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700`}
+            onClick={() => navigate("/bookmarks")}
+          >
+            <div className="flex items-start justify-between mb-6">
+              <div
+                className={`w-16 h-16 rounded-full flex items-center justify-center bg-red-100 dark:bg-red-900`}
+              >
+                <i className="fas fa-bookmark text-2xl text-yellow-500 dark:text-yellow-400" />
               </div>
-              <h2 className="text-2xl font-bold mb-2 text-gray-700 dark:text-gray-300">
-                Visit Bookmarked Problems
-              </h2>
-              <p className={`mb-6 text-gray-600 dark:text-gray-300 `}>
-                Browse your saved problems and quickly revisit your toughest
-                challenges.
-              </p>
-              <div className="flex items-center">
-                <span className={`text-base text-blue-600 dark:text-blue-400`}>
-                  Revisit problems
-                </span>
-              </div>
+              <span className="text-sm font-medium px-3 py-1 rounded-full bg-purple-100 text-purple-800">
+                Saved Challenges
+              </span>
+            </div>
+            <h2 className="text-2xl font-bold mb-2 text-gray-700 dark:text-gray-300">
+              Visit Bookmarked Problems
+            </h2>
+            <p className={`mb-6 text-gray-600 dark:text-gray-300 `}>
+              Browse your saved problems and quickly revisit your toughest
+              challenges.
+            </p>
+            <div className="flex items-center">
+              <span className={`text-base text-blue-600 dark:text-blue-400`}>
+                Revisit problems
+              </span>
             </div>
           </div>
         </div>

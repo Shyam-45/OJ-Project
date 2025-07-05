@@ -5,8 +5,6 @@ import {
   faEdit,
   faTrash,
   faCalendar,
-  faTimes,
-  faSave,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { deleteProblem } from "../services/problem";
@@ -25,14 +23,12 @@ export default function ProfileProblem({ problem, u_id, onDelete }) {
       setDelErr("");
       onDelete();
     } catch (err) {
-      console.log(err);
       setDelErr("Something went wrong");
     }
     return;
   };
 
   const handleViewProblem = async () => {
-    console.log("/u_id/p_id/view");
     navigate(`/${u_id}/${problem.problemID}/view`);
   };
 

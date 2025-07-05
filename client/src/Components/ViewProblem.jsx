@@ -56,7 +56,6 @@ export default function ViewProblem() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-10 px-4 md:px-8">
       <div className="max-w-4xl mx-auto space-y-8">
-        {/* Title and Tags */}
         <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -72,7 +71,6 @@ export default function ViewProblem() {
         <Section title="Input Format" content={problem.inputInfo} />
         <Section title="Output Format" content={problem.outputInfo} />
 
-        {/* Sample Input Output */}
         <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 border border-gray-200 dark:border-gray-700">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             Sample Input Output
@@ -104,7 +102,9 @@ export default function ViewProblem() {
               ))}
             </div>
           ) : (
-            <p className="text-gray-600 dark:text-gray-400">No sample cases provided.</p>
+            <p className="text-gray-600 dark:text-gray-400">
+              No sample cases provided.
+            </p>
           )}
         </div>
       </div>

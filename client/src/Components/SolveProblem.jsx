@@ -8,6 +8,8 @@ import {
   getVerdict,
   getCustomOutput,
 } from "../services/problem";
+import { toggleBookmark, isProblemBookmarked } from "../services/bookmark";
+
 import {
   cSample,
   pySample,
@@ -43,6 +45,7 @@ export default function SolveProblem() {
   const [disableSubmit, setDisableSubmit] = useState(false);
   const [disableCustomRun, setDisableCustomRun] = useState(false);
   const [aiReview, setAiReview] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
 
   useEffect(() => {
     async function fetchProblem() {
@@ -55,6 +58,10 @@ export default function SolveProblem() {
         }
         setProblem(response.problemInfo);
         setProblemErr("");
+        const isBookmarked = await isProblemBookmarked(
+          response.problemInfo._id
+        );
+        setBookmarked(isBookmarked);
       } catch (err) {
         setProblemErr("An error occurred");
         setProblem("");
@@ -79,6 +86,13 @@ export default function SolveProblem() {
     setAiReview(false);
     setOutput("");
     setOutputError("");
+  };
+
+  const handleBookmarkClick = async () => {
+    const result = await toggleBookmark(problemID);
+    if (result !== null) {
+      setBookmarked(result);
+    }
   };
 
   const handleCustomRun = async () => {
@@ -114,6 +128,7 @@ export default function SolveProblem() {
       setDisableSubmit(false);
       setShowAIReview(false);
       setDisableCustomRun(false);
+      setAiReview(false);
     }
   };
 
@@ -154,6 +169,7 @@ export default function SolveProblem() {
       setDisableSubmit(false);
       setShowAIReview(false);
       setDisableCustomRun(false);
+      setAiReview(false);
     }
   };
 
@@ -197,6 +213,7 @@ export default function SolveProblem() {
       setDisableSubmit(false);
       setShowAIReview(false);
       setDisableCustomRun(false);
+      setAiReview(false);
     }
   };
 
@@ -217,7 +234,6 @@ export default function SolveProblem() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
       <div className="container mx-auto p-4">
-        {/* Main content */}
         <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-120px)]">
           <div className="w-full lg:w-2/5 lg:overflow-auto rounded-lg shadow-lg bg-white dark:bg-gray-800 p-6">
             {!showResults ? (
@@ -231,11 +247,16 @@ export default function SolveProblem() {
                   </div>
                   <button
                     className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    onClick={() => {
-                      /* Handle bookmark */
-                    }}
+                    onClick={handleBookmarkClick}
+                    title="Toggle Bookmark"
                   >
-                    <i className="far fa-bookmark text-xl hover:text-blue-600 dark:hover:text-blue-400"></i>
+                    <i
+                      className={`text-xl ${
+                        bookmarked
+                          ? "fas fa-bookmark text-blue-600 dark:text-blue-400"
+                          : "far fa-bookmark"
+                      }`}
+                    ></i>
                   </button>
                 </div>
                 <div className="mb-6">

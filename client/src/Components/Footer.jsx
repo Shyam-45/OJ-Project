@@ -6,23 +6,34 @@ export default function Footer() {
           © {new Date().getFullYear()}{" "}
           <a href="/" className="font-semibold hover:underline">
             codeMaster™
-          </a>
-          {" "}
+          </a>{" "}
           All Rights Reserved.
         </span>
         <ul className="flex space-x-4 text-sm text-gray-600 dark:text-gray-400">
           <li>
-            <a href="#" className="hover:underline">
+            <a
+              href="#"
+              onClick={(e) => e.preventDefault()}
+              className="hover:underline"
+            >
               Privacy Policy
             </a>
           </li>
           <li>
-            <a href="#" className="hover:underline">
+            <a
+              href="#"
+              onClick={(e) => e.preventDefault()}
+              className="hover:underline"
+            >
               Licensing
             </a>
           </li>
           <li>
-            <a href="#" className="hover:underline">
+            <a
+              href="#"
+              onClick={(e) => e.preventDefault()}
+              className="hover:underline"
+            >
               Contact
             </a>
           </li>

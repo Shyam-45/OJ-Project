@@ -52,7 +52,6 @@ export default function Navbar() {
       }
       setLogoutErr(response.error);
     } catch (err) {
-      console.error("Error while logging out", err);
       setLogoutErr("Logout failed. Please try again");
     }
   };

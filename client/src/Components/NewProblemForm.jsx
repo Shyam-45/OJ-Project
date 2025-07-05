@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { getUserInfo } from "../services/user";
 import { sendNewProblem } from "../services/problem";
 
 export default function NewProblemForm() {
@@ -30,7 +29,6 @@ export default function NewProblemForm() {
     }
   }, [status.text]);
 
-  // Refs for clearing file inputs
   const refSampleIn = useRef();
   const refSampleOut = useRef();
   const refTestIn = useRef();
@@ -93,14 +91,12 @@ export default function NewProblemForm() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-12 px-4">
       <div className="max-w-3xl mx-auto space-y-6">
-        {/* Header */}
         <div className="bg-gray-50 dark:bg-gray-800 border-l-4 border-indigo-600 dark:border-indigo-400 rounded px-6 py-5">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             Create New Coding Problem
           </h1>
         </div>
 
-        {/* Status Banner */}
         {status.text && (
           <div
             className={`p-4 rounded ${
@@ -113,18 +109,15 @@ export default function NewProblemForm() {
           </div>
         )}
 
-        {/* Form */}
         <form
           onSubmit={handleSubmission}
           className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden"
         >
           <div className="md:flex">
-            {/* Left: Details */}
             <div className="md:w-2/3 p-6 space-y-6 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700">
               <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
                 Problem Detail
               </h2>
-              {/* Title */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Problem Title <span className="text-red-500">*</span>
@@ -139,7 +132,6 @@ export default function NewProblemForm() {
                   className="mt-1 w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 dark:text-white"
                 />
               </div>
-              {/* Description */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Description <span className="text-red-500">*</span>
@@ -154,7 +146,6 @@ export default function NewProblemForm() {
                   className="mt-1 w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 dark:text-white"
                 />
               </div>
-              {/* I/O Format */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -185,7 +176,6 @@ export default function NewProblemForm() {
                   />
                 </div>
               </div>
-              {/* Sample I/O */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -216,7 +206,6 @@ export default function NewProblemForm() {
                   />
                 </div>
               </div>
-              {/* Difficulty */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Difficulty Level <span className="text-red-500">*</span>
@@ -233,7 +222,6 @@ export default function NewProblemForm() {
                   <option value="hard">Hard</option>
                 </select>
               </div>
-              {/* Submit */}
               <button
                 type="submit"
                 className="mt-6 w-full bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white font-semibold py-3 rounded-lg transition"
@@ -242,7 +230,6 @@ export default function NewProblemForm() {
               </button>
             </div>
 
-            {/* Right: File Uploads */}
             <div className="md:w-1/3 bg-gray-50 dark:bg-gray-700 p-6 space-y-6">
               <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
                 Test Case Files
