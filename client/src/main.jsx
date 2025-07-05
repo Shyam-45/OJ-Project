@@ -21,6 +21,7 @@ import CompilerPage from "./pages/CompilerPage.jsx";
 import AddProblem from "./pages/AddProblem.jsx";
 import ViewProblemPage from "./pages/ViewProblemPage.jsx";
 import ScrollToTop from "./utils/scrollToTop.jsx";
+import BookmarkedProblems from "./pages/BookmarkedProblems.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -41,6 +42,7 @@ const router = createBrowserRouter(
             />
             <Route path=":userID" element={<ProfilePage />} />
             <Route path="compiler" element={<CompilerPage />} />
+            <Route path="bookmarks" element={<BookmarkedProblems />} />
           </Route>
         </Route>
       </Route>
