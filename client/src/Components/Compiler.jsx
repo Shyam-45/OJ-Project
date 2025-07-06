@@ -94,7 +94,7 @@ export default function Compiler() {
                     <option value="cpp">C++</option>
                     <option value="py">Python</option>
                     <option value="js">Javascript</option>
-                    <option value="java">Java</option>
+                    {/* <option value="java">Java</option> */}
                   </select>
                 </div>
 
