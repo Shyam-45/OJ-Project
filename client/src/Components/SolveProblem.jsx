@@ -450,7 +450,7 @@ export default function SolveProblem() {
                     onChange={selectLanguage}
                     className="mb-4 px-2 h-8 text-base border-2 border-gray-300 rounded-full dark:bg-gray-400"
                   >
-                    <option value="c">C</option>
+                    {/* <option value="c">C</option> */}
                     <option value="cpp">C++</option>
                     <option value="py">Python</option>
                     <option value="js">Javascript</option>

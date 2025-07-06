@@ -31,6 +31,7 @@ const router = createBrowserRouter(
           <Route path="login" element={<LoginPage />} />
           <Route path="signup" element={<SignupPage />} />
           <Route path="problems/:problemID" element={<SolveProblemPage />} />
+          <Route path="compiler" element={<CompilerPage />} />
           <Route path="/" element={<App />}>
             <Route index element={<HomePage />} />
             <Route path="home" element={<HomePage />} />
@@ -41,7 +42,6 @@ const router = createBrowserRouter(
               element={<ViewProblemPage />}
             />
             <Route path=":userID" element={<ProfilePage />} />
-            <Route path="compiler" element={<CompilerPage />} />
             <Route path="bookmarks" element={<BookmarkedProblems />} />
           </Route>
         </Route>
