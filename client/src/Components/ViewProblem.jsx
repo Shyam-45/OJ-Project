@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProblemAndTestcases } from "../services/problem";
+import { getProblemAndTestcases } from "../Services/problem";
 
 function Section({ title, content }) {
   return (

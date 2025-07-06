@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getUserInfo, getUserProblem } from "../services/user";
-import { deleteProblem } from "../services/problem";
-import ProfileProblem from "../components/ProfileProblem";
+import { getUserInfo, getUserProblem } from "../Services/user";
+import { deleteProblem } from "../Services/problem";
+import ProfileProblem from "../Components/ProfileProblem";
 
 export default function ProfilePage() {
   const navigate = useNavigate();

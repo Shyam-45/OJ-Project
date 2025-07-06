@@ -1,14 +1,14 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Editor from "@monaco-editor/react";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext } from "../Contexts/AuthContext";
 import {
   getProblemInfo,
   getOutput,
   getVerdict,
   getCustomOutput,
-} from "../services/problem";
-import { toggleBookmark, isProblemBookmarked } from "../services/bookmark";
+} from "../Services/problem";
+import { toggleBookmark, isProblemBookmarked } from "../Services/bookmark";
 
 import {
   cSample,
@@ -16,7 +16,7 @@ import {
   javaSample,
   jsSample,
   cppSample,
-} from "../utils/sampleCode";
+} from "../Utils/sampleCode";
 
 export default function SolveProblem() {
   const { problemID } = useParams();

@@ -8,20 +8,20 @@ import {
 } from "react-router-dom";
 import "./index.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { AuthProvider } from "./contexts/AuthContext.jsx";
-import ProtectedRoutes from "./guards/ProtectedRoutes.jsx";
+import { AuthProvider } from "./Contexts/AuthContext.jsx";
+import ProtectedRoutes from "./Guards/ProtectedRoutes.jsx";
 import App from "./App.jsx";
-import LoginPage from "./pages/LoginPage.jsx";
-import SolveProblemPage from "./pages/SolveProblemPage.jsx";
-import SignupPage from "./pages/SignupPage.jsx";
-import HomePage from "./pages/HomePage.jsx";
-import ProfilePage from "./pages/ProfilePage.jsx";
-import ProblemPage from "./pages/ProblemPage.jsx";
-import CompilerPage from "./pages/CompilerPage.jsx";
-import AddProblem from "./pages/AddProblem.jsx";
-import ViewProblemPage from "./pages/ViewProblemPage.jsx";
-import ScrollToTop from "./utils/scrollToTop.jsx";
-import BookmarkedProblems from "./pages/BookmarkedProblems.jsx";
+import LoginPage from "./Pages/LoginPage.jsx";
+import SolveProblemPage from "./Pages/SolveProblemPage.jsx";
+import SignupPage from "./Pages/SignupPage.jsx";
+import HomePage from "./Pages/HomePage.jsx";
+import ProfilePage from "./Pages/ProfilePage.jsx";
+import ProblemPage from "./Pages/ProblemPage.jsx";
+import CompilerPage from "./Pages/CompilerPage.jsx";
+import AddProblem from "./Pages/AddProblem.jsx";
+import ViewProblemPage from "./Pages/ViewProblemPage.jsx";
+import ScrollToTop from "./Utils/scrollToTop.jsx";
+import BookmarkedProblems from "./Pages/BookmarkedProblems.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

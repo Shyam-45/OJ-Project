@@ -7,7 +7,7 @@ import {
   faCalendar,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { deleteProblem } from "../services/problem";
+import { deleteProblem } from "../Services/problem";
 
 export default function ProfileProblem({ problem, u_id, onDelete }) {
   const navigate = useNavigate();

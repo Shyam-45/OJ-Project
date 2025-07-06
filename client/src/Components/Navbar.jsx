@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { AuthContext } from "../contexts/AuthContext";
-import { logoutUser } from "../services/user";
+import { AuthContext } from "../Contexts/AuthContext";
+import { logoutUser } from "../Services/user";
 
 export default function Navbar() {
   const { setIsSigned, userId, setUserId, darkMode, setDarkMode } =

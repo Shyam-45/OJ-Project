@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Problem from "../components/Problem.jsx";
-import { getProblemList } from "../services/problem.js";
+import Problem from "../Components/Problem.jsx";
+import { getProblemList } from "../Services/problem.js";
 
 export default function ProblemPage() {
   const [problemList, setProblemList] = useState([]);
@@ -31,13 +31,11 @@ export default function ProblemPage() {
   return (
     <div className="mt-12 lg:mt-16 dark:bg-gray-950">
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-10 px-4 sm:px-6 lg:px-8">
-  
         <div className="max-w-7xl mx-auto text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-300">
             Browse through all available coding problems
           </h1>
         </div>
-
 
         {fetchProblem ? (
           <div className="text-center mt-20">

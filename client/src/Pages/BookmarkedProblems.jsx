@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Problem from "../components/Problem.jsx";
-import { getProblemList } from "../services/problem.js";
-import { fetchBookmarkedProblems } from "../services/bookmark.js";
+import Problem from "../Components/Problem.jsx";
+import { getProblemList } from "../Services/problem.js";
+import { fetchBookmarkedProblems } from "../Services/bookmark.js";
 
 export default function ProblemPage() {
   const [bookmarks, setBookmarks] = useState([]);

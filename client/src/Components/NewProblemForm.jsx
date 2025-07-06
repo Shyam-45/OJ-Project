@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { sendNewProblem } from "../services/problem";
+import { sendNewProblem } from "../Services/problem";
 
 export default function NewProblemForm() {
   const { userID } = useParams();

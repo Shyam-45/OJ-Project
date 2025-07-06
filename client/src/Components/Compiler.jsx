@@ -1,14 +1,14 @@
 import { useState, useContext } from "react";
 import Editor from "@monaco-editor/react";
-import { AuthContext } from "../contexts/AuthContext";
-import { getCustomOutput } from "../services/problem";
+import { AuthContext } from "../Contexts/AuthContext";
+import { getCustomOutput } from "../Services/problem";
 import {
   cSample,
   pySample,
   javaSample,
   jsSample,
   cppSample,
-} from "../utils/sampleCode";
+} from "../Utils/sampleCode";
 
 export default function Compiler() {
   const { darkMode } = useContext(AuthContext);

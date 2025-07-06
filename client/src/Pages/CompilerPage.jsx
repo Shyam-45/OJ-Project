@@ -1,5 +1,5 @@
-import Navbar from "../components/Navbar.jsx";
-import Compiler from "../components/Compiler.jsx";
+import Navbar from "../Components/Navbar.jsx";
+import Compiler from "../Components/Compiler.jsx";
 
 export default function CompilerPage() {
   return (
