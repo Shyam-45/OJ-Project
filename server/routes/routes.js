@@ -13,13 +13,11 @@ router.use("/problem", problem);
 router.use("/bookmark", bookmark);
 
 router.get("/authlogin", authentincateUser, (req, res) => {
-  return res
-    .status(200)
-    .json({
-      success: true,
-      message: "User Authentication successful",
-      userid: req.userId,
-    });
+  return res.status(200).json({
+    success: true,
+    message: "User Authentication successful",
+    userid: req.userId,
+  });
 });
 
 export default router;

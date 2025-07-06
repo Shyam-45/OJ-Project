@@ -13,7 +13,8 @@ const port = process.env.PORT;
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    // origin: "http://localhost:5173",
+    origin: true,
     credentials: true,
   })
 );
@@ -28,6 +29,10 @@ app.use("/", routes);
 
 app.use(errorHandler);
 
+app.get("/server", (req, res) => {
+  res.json({ online: "Server" });
+});
+
 app.listen(port, () => {
-  // console.log(`Server listening on port ${port}!`);
+  console.log(`Server listening on port ${port}!`);
 });

@@ -1,6 +1,9 @@
 import axios from "axios";
 import dotenv from "dotenv";
 import Testcase from "../models/Testcase.js";
+import { runCustomCode } from "./runCustomCode.js";
+import { runCode } from "./runCode.js";
+import { submitCode } from "./submitCode.js";
 
 dotenv.config();
 const compiler_url = process.env.COMPILER_URL;
@@ -13,24 +16,8 @@ export const customOutput = async (req, res) => {
       .status(400)
       .json({ success: false, error: "please enter the code" });
   }
-  try {
-    const payload = {
-      language,
-      code,
-      inputValue,
-    };
-    const response = await axios.post(
-      `${compiler_url}/compiler/run/custom`,
-      payload,
-      {
-        withCredentials: true,
-      }
-    );
-    const response_data = response.data;
-    return res.status(200).json(response_data);
-  } catch (err) {
-    res.status(500).json({ success: false, error: "Something went wrong" });
-  }
+
+  return runCustomCode(req, res);
 };
 
 export const codeOutput = async (req, res) => {
@@ -45,16 +32,9 @@ export const codeOutput = async (req, res) => {
     const testcaseInfo = await Testcase.findOne({ problemID });
     const sampleInputOutput = testcaseInfo.sampleInputOutputFile;
 
-    const payload = {
-      language,
-      code,
-      sampleInputOutput,
-    };
-    const response = await axios.post(`${compiler_url}/compiler/run`, payload, {
-      withCredentials: true,
-    });
-    const response_data = response.data;
-    return res.status(200).json(response_data);
+    req.body["sampleInputOutput"] = sampleInputOutput;
+
+    return runCode(req, res);
   } catch (err) {
     res.status(500).json({ success: false, error: "something went wrong" });
   }
@@ -73,20 +53,9 @@ export const codeVerdict = async (req, res) => {
     const testcaseInfo = await Testcase.findOne({ problemID });
     const inputOutput = testcaseInfo.inputOutputFile;
 
-    const payload = {
-      language,
-      code,
-      inputOutput,
-    };
-    const response = await axios.post(
-      `${compiler_url}/compiler/submit`,
-      payload,
-      {
-        withCredentials: true,
-      }
-    );
-    const response_data = response.data;
-    return res.status(200).json(response_data);
+    req.body["inputOutput"] = inputOutput;
+
+    return submitCode(req, res);
   } catch (err) {
     res.status(500).json({ success: false, error: "something went wrong" });
   }
